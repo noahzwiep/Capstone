@@ -1,13 +1,12 @@
 #include "motor.h"
 
-motor_direction_t g_leftMotorDirection 	= eDirectionNotSet;
-volatile uint16_t g_leftMotorPWM		= 0;
-motor_direction_t g_rightMotorDirection = eDirectionNotSet;
-volatile uint16_t g_rightMotorPWM		= 0;
-
+motor_direction_t g_motorDirection[eTOTAL_MOTOR_COUNT] = {eDirectionNotSet, eDirectionNotSet};
+volatile uint16_t g_motorPwm[eTOTAL_MOTOR_COUNT] = {0, 0};
 volatile int64_t pulseCount[eTOTAL_MOTOR_COUNT] = {0,0};
+
 FTM_Instance_t LEFT_FTM;
 FTM_Instance_t RIGHT_FTM;
+FTM_Instance_t ftmStructs[eTOTAL_MOTOR_COUNT];
 
 int64_t previousError = 0;
 
@@ -114,6 +113,7 @@ void MotorsInit(void)
     LEFT_FTM.FTM_IRQ_ID 		= FTM3_IRQn;
     LEFT_FTM.FTM_CHANNEL_FLAG 	= kFTM_Chnl0Flag;
     Pwm_Init(LEFT_FTM);
+    ftmStructs[eLeftMotor] = LEFT_FTM;
 
     RIGHT_FTM.FTM_BASEADDR 		= FTM0;
     RIGHT_FTM.FTM_CHANNEL 		= kFTM_Chnl_3;
@@ -121,6 +121,7 @@ void MotorsInit(void)
     RIGHT_FTM.FTM_IRQ_ID 		= FTM0_IRQn;
     RIGHT_FTM.FTM_CHANNEL_FLAG 	= kFTM_Chnl3Flag;
     Pwm_Init(RIGHT_FTM);
+    ftmStructs[eRightMotor] = RIGHT_FTM;
 
     InitializeEncoderGPIO();
     InitializeMotorGPIO();
@@ -134,10 +135,10 @@ void MotorsInit(void)
 void UpdatePwm(motor_t motor, int32_t new_pwm)
 {
 	FTM_Instance_t ftm_instance;
+	motor_direction_t direction;
 
 	if(new_pwm != 0){
-		motor_direction_t direction = (new_pwm > 0) ? eDirectionClockwise : eDirectionCounterClockwise;
-		UpdateMotorDirection(motor, direction);
+		direction = (new_pwm > 0) ? eDirectionClockwise : eDirectionCounterClockwise;
 	}
 
 	new_pwm = abs(new_pwm);
@@ -148,19 +149,8 @@ void UpdatePwm(motor_t motor, int32_t new_pwm)
 		new_pwm = 0;
 	}
 
-	switch(motor)
-	{
-		case eLeftMotor:
-			ftm_instance = LEFT_FTM;
-			g_leftMotorPWM = new_pwm;
-			break;
-		case eRightMotor:
-			ftm_instance = RIGHT_FTM;
-			g_rightMotorPWM = new_pwm;
-			break;
-		default:
-			return;
-	}
+	ftm_instance = ftmStructs[motor];
+	g_motorPwm[motor] = new_pwm;
 
     /* Disable channel output before updating the dutycycle */
     FTM_UpdateChnlEdgeLevelSelect(ftm_instance.FTM_BASEADDR, ftm_instance.FTM_CHANNEL, 0U);
@@ -173,6 +163,8 @@ void UpdatePwm(motor_t motor, int32_t new_pwm)
 
     /* Start channel output with updated dutycycle */
     FTM_UpdateChnlEdgeLevelSelect(ftm_instance.FTM_BASEADDR, ftm_instance.FTM_CHANNEL, kFTM_HighTrue);
+
+	UpdateMotorDirection(motor, direction);
 }
 
 
@@ -184,20 +176,20 @@ void UpdateMotorDirection(motor_t motor, motor_direction_t direction)
 	switch(motor)
 	{
 		case eLeftMotor:
-			if(direction == g_leftMotorDirection) return;
+			if(direction == g_motorDirection[eLeftMotor]) return;
 			gpio_base_a = BOARD_LEFT_MOTOR_A_GPIO;
 			gpio_base_b = BOARD_LEFT_MOTOR_B_GPIO;
 			gpio_pin_a = BOARD_LEFT_MOTOR_A_PIN;
 			gpio_pin_b = BOARD_LEFT_MOTOR_B_PIN;
-			g_leftMotorDirection = direction;
+			g_motorDirection[eLeftMotor] = direction;
 			break;
 		case eRightMotor:
-			if(direction == g_rightMotorDirection) return;
+			if(direction == g_motorDirection[eRightMotor]) return;
 			gpio_base_a = BOARD_RIGHT_MOTOR_A_GPIO;
 			gpio_base_b = BOARD_RIGHT_MOTOR_B_GPIO;
 			gpio_pin_a = BOARD_RIGHT_MOTOR_A_PIN;
 			gpio_pin_b = BOARD_RIGHT_MOTOR_B_PIN;
-			g_rightMotorDirection = direction;
+			g_motorDirection[eRightMotor] = direction;
 			break;
 		default:
 			return;
