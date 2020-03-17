@@ -18,6 +18,7 @@ void PORTB_IRQHandler(void)
 		bUpdateAccelerometer = true;
 		GPIO_PortClearInterruptFlags(GPIOB, 1U << BOARD_MPU6050_INTERRUPT_PIN);
 	}
+    __DSB();
 }
 
 void PORTC_IRQHandler(void)
@@ -27,7 +28,7 @@ void PORTC_IRQHandler(void)
 	if(flags & (1<< BOARD_RIGHT_ENCODER_1_PIN)){
 		//If the encoder signal 1 goes low, and encoder signal 2 is still high, this implies going in one direction
 		(GPIO_PinRead(BOARD_RIGHT_ENCODER_2_GPIO, BOARD_RIGHT_ENCODER_2_PIN) == 1) ? pulseCount[eRightMotor]-- : pulseCount[eRightMotor]++;
-		GPIO_PortClearInterruptFlags(GPIOC, 1U << BOARD_RIGHT_ENCODER_1_PIN);
+		GPIO_PortClearInterruptFlags(GPIOC, 1U << BOARD_RIGHT_ENCODER_1_PIN);;
 	}
 	if(flags & (1 << BOARD_FRONT_LEFT_ACT_PIN)){
 		GPIO_PortClearInterruptFlags(GPIOC,(1 << BOARD_FRONT_LEFT_ACT_PIN));
@@ -49,6 +50,7 @@ void PORTC_IRQHandler(void)
 		pulseCount[eRightMotor] = 0;
 		GPIO_PortClearInterruptFlags(GPIOC,(1 << BOARD_FRONT_RIGHT_LIMIT_PIN));
 	}
+    __DSB();
 }
 
 #ifdef __cplusplus

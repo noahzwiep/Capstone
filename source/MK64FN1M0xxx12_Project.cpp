@@ -41,6 +41,7 @@
 #include "fsl_debug_console.h"
 #include "motor.h"
 #include "potentiometer.h"
+#include "accelerometer.h"
 
 /*******************************************************************************
  * Definitions
@@ -135,19 +136,24 @@ int main(void) {
     BOARD_InitBootPins();
     BOARD_InitBootClocks();
     BOARD_InitBootPeripherals();
+    BOARD_InitACCELPins();
   	/* Init FSL debug console. */
     BOARD_InitDebugConsole();
 
     MotorsInit();
     InitializePot();
-
     InitializeTimers();
 
-    uint32_t potValue;
+    bool accelInit = InitializeAccelerometer();
+    if(accelInit){
+    	while(1){}
+    }
+
+    uint32_t potValue = 0;
     while(1) {
     	if(b5kHzFlag){
-    		//UpdatePwm(eLeftMotor, 15);
-    		goToDegreePID(eLeftMotor, potValue*312/3290);
+    		//goToDegreePID(eLeftMotor, potValue*312/3290);
+    		//goToDegreePID(eRightMotor, potValue*312/3290);
     		b5kHzFlag = false;
     	}
 

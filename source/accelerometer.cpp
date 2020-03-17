@@ -31,8 +31,12 @@ bool InitializeAccelerometer(void)
     EnableIRQ(PORTB_IRQn);
     GPIO_PinInit(BOARD_MPU6050_INTERRUPT_GPIO, BOARD_MPU6050_INTERRUPT_PIN, &general_config);
 
+    //Uncomment this if you want to test the i2c line
+    //TestMasterTransmit();
+
 	mpu.initialize();
-	if(!mpu.testConnection()){
+	bool isProperlyConnected = mpu.testConnection();
+	if(!isProperlyConnected){
 		return false;
 	}
 	devStatus = mpu.dmpInitialize();
@@ -96,6 +100,7 @@ void GetMotionValues(float * ax, float * ay, float * az, float * yaw, float * pi
 {
 	if(bUpdateAccelerometer){
 		UpdateMotion6Values();
+		bUpdateAccelerometer = false;
 	}
 	*ax = aaReal.x;
 	*ay = aaReal.y;

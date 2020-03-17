@@ -300,20 +300,6 @@ void BOARD_InitOSCPins(void);
 #define BOARD_ACCEL_SCL_PIN 24U    /*!<@brief PORTE pin index: 24 */
                                    /* @} */
 
-/*! @name PORTC6 (number 78), U8[11]/SW2
-  @{ */
-#define BOARD_ACCEL_INT1_GPIO GPIOC /*!<@brief GPIO device name: GPIOC */
-#define BOARD_ACCEL_INT1_PORT PORTC /*!<@brief PORT device name: PORTC */
-#define BOARD_ACCEL_INT1_PIN 6U     /*!<@brief PORTC pin index: 6 */
-                                    /* @} */
-
-/*! @name PORTC13 (number 85), U8[9]
-  @{ */
-#define BOARD_ACCEL_INT2_GPIO GPIOC /*!<@brief GPIO device name: GPIOC */
-#define BOARD_ACCEL_INT2_PORT PORTC /*!<@brief PORT device name: PORTC */
-#define BOARD_ACCEL_INT2_PIN 13U    /*!<@brief PORTC pin index: 13 */
-                                    /* @} */
-
 /*!
  * @brief Configures pin routing and optionally pin electrical features.
  *

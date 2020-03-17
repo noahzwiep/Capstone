@@ -30,7 +30,6 @@ THE SOFTWARE.
 ===============================================
 */
 
-
 #include "I2Cdev.h"
 #include <string.h>
 
@@ -40,13 +39,25 @@ THE SOFTWARE.
 #define MPU6050_IRQ I2C0_IRQn
 #define MPU6050_IRQHandler I2C0_IRQHandler
 
+i2c_master_handle_t g_m_handle;
+volatile bool g_MasterCompletionFlag = false;
+
+static void i2c_master_callback(I2C_Type *base, i2c_master_handle_t *handle, status_t status, void *userData)
+{
+    /* Signal transfer success when received success status. */
+    if (status == kStatus_Success)
+    {
+        g_MasterCompletionFlag = true;
+    }
+}
+
 int8_t MasterTransmit(uint32_t address, uint32_t subaddress, uint8_t * data, uint32_t length)
 {
     i2c_master_config_t masterConfig;
     i2c_master_transfer_t masterXfer;
 
     I2C_MasterGetDefaultConfig(&masterConfig);
-    I2C_MasterInit(MPU6050_BASEADDR, &masterConfig, MPU6050_CLK_SRC);
+    I2C_MasterInit(MPU6050_BASEADDR, &masterConfig, MPU6050_CLK_FREQ);
 
     memset(&masterXfer, 0, sizeof(masterXfer));
 
@@ -60,7 +71,8 @@ int8_t MasterTransmit(uint32_t address, uint32_t subaddress, uint8_t * data, uin
     masterXfer.dataSize       = length;
     masterXfer.flags          = kI2C_TransferDefaultFlag;
 
-    return (I2C_MasterTransferBlocking(MPU6050_BASEADDR, &masterXfer) == kStatus_Success ? 0 : -1);
+    status_t retStatus = I2C_MasterTransferBlocking(MPU6050_BASEADDR, &masterXfer);
+    return (retStatus == kStatus_Success) ? 0 : -1;
 }
 
 int8_t MasterReceive(uint32_t address, uint32_t subaddress, uint8_t * data, uint32_t length)
@@ -69,7 +81,7 @@ int8_t MasterReceive(uint32_t address, uint32_t subaddress, uint8_t * data, uint
     i2c_master_transfer_t masterXfer;
 
     I2C_MasterGetDefaultConfig(&masterConfig);
-    I2C_MasterInit(MPU6050_BASEADDR, &masterConfig, MPU6050_CLK_SRC);
+    I2C_MasterInit(MPU6050_BASEADDR, &masterConfig, MPU6050_CLK_FREQ);
 
     memset(&masterXfer, 0, sizeof(masterXfer));
 
@@ -80,10 +92,24 @@ int8_t MasterReceive(uint32_t address, uint32_t subaddress, uint8_t * data, uint
     masterXfer.subaddress     = (uint32_t)subaddress;
     masterXfer.subaddressSize = 1;
     masterXfer.data           = data;
-    masterXfer.dataSize       = length - 1U;
+    masterXfer.dataSize       = length;
     masterXfer.flags          = kI2C_TransferDefaultFlag;
 
-    return (I2C_MasterTransferBlocking(MPU6050_BASEADDR, &masterXfer) == kStatus_Success ? 0 : -1);
+    status_t retStatus = I2C_MasterTransferBlocking(MPU6050_BASEADDR, &masterXfer);
+    return (retStatus == kStatus_Success ? 0 : -1);
+}
+
+void TestMasterTransmit(void)
+{
+	uint8_t deviceAddress = 0x00U;
+	uint32_t I2C_DATA_LENGTH = 33U;
+	uint8_t g_master_txBuff[I2C_DATA_LENGTH];
+    g_master_txBuff[0] = I2C_DATA_LENGTH - 1U;
+    for (uint32_t i = 1U; i < I2C_DATA_LENGTH; i++)
+    {
+        g_master_txBuff[i] = i - 1;
+    }
+	MasterTransmit(0x4, deviceAddress, g_master_txBuff, I2C_DATA_LENGTH);
 }
 
 

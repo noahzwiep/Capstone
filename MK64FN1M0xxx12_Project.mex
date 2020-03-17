@@ -150,11 +150,6 @@
                         <data>true</data>
                      </feature>
                   </dependency>
-                  <dependency resourceType="Peripheral" resourceId="GPIOA" description="Peripheral GPIOA is not initialized" problem_level="1" source="Pins:BOARD_InitPins">
-                     <feature name="initialized" evaluation="equal">
-                        <data>true</data>
-                     </feature>
-                  </dependency>
                   <dependency resourceType="Peripheral" resourceId="ADC0" description="Peripheral ADC0 is not initialized" problem_level="1" source="Pins:BOARD_InitPins">
                      <feature name="initialized" evaluation="equal">
                         <data>true</data>
@@ -239,7 +234,7 @@
                   <pin peripheral="GPIOA" signal="GPIO, 1" pin_num="35" pin_signal="PTA1/UART0_RX/FTM0_CH6/JTAG_TDI/EZP_DI">
                      <pin_features>
                         <pin_feature name="direction" value="INPUT"/>
-                        <pin_feature name="gpio_interrupt" value="kPORT_InterruptFallingEdge"/>
+                        <pin_feature name="gpio_interrupt" value="kPORT_InterruptOrDMADisabled"/>
                         <pin_feature name="drive_strength" value="low"/>
                         <pin_feature name="pull_select" value="up"/>
                      </pin_features>
@@ -332,7 +327,7 @@
                   <pin peripheral="GPIOC" signal="GPIO, 11" pin_num="83" pin_signal="ADC1_SE7b/PTC11/LLWU_P11/I2C1_SDA/FTM3_CH7/I2S0_RXD1/FB_RW_b">
                      <pin_features>
                         <pin_feature name="direction" value="INPUT"/>
-                        <pin_feature name="gpio_interrupt" value="kPORT_InterruptFallingEdge"/>
+                        <pin_feature name="gpio_interrupt" value="kPORT_InterruptOrDMADisabled"/>
                         <pin_feature name="pull_select" value="up"/>
                      </pin_features>
                   </pin>
@@ -587,11 +582,6 @@
                         <data>true</data>
                      </feature>
                   </dependency>
-                  <dependency resourceType="SWComponent" resourceId="platform.drivers.gpio" description="Pins initialization requires the GPIO Driver in the project." problem_level="2" source="Pins:BOARD_InitACCELPins">
-                     <feature name="enabled" evaluation="equal" configuration="core0">
-                        <data>true</data>
-                     </feature>
-                  </dependency>
                </dependencies>
                <pins>
                   <pin peripheral="I2C0" signal="SDA" pin_num="32" pin_signal="ADC0_SE18/PTE25/UART4_RX/I2C0_SDA/EWM_IN">
@@ -599,7 +589,7 @@
                         <pin_feature name="slew_rate" value="fast"/>
                         <pin_feature name="open_drain" value="enable"/>
                         <pin_feature name="drive_strength" value="low"/>
-                        <pin_feature name="pull_select" value="down"/>
+                        <pin_feature name="pull_select" value="no_init"/>
                         <pin_feature name="pull_enable" value="disable"/>
                         <pin_feature name="passive_filter" value="disable"/>
                      </pin_features>
@@ -609,31 +599,8 @@
                         <pin_feature name="slew_rate" value="fast"/>
                         <pin_feature name="open_drain" value="enable"/>
                         <pin_feature name="drive_strength" value="low"/>
-                        <pin_feature name="pull_select" value="down"/>
+                        <pin_feature name="pull_select" value="no_init"/>
                         <pin_feature name="pull_enable" value="disable"/>
-                        <pin_feature name="passive_filter" value="disable"/>
-                     </pin_features>
-                  </pin>
-                  <pin peripheral="GPIOC" signal="GPIO, 6" pin_num="78" pin_signal="CMP0_IN0/PTC6/LLWU_P10/SPI0_SOUT/PDB0_EXTRG/I2S0_RX_BCLK/FB_AD9/I2S0_MCLK">
-                     <pin_features>
-                        <pin_feature name="identifier" value="ACCEL_INT1"/>
-                        <pin_feature name="direction" value="INPUT"/>
-                        <pin_feature name="slew_rate" value="fast"/>
-                        <pin_feature name="open_drain" value="enable"/>
-                        <pin_feature name="drive_strength" value="low"/>
-                        <pin_feature name="pull_select" value="up"/>
-                        <pin_feature name="pull_enable" value="enable"/>
-                        <pin_feature name="passive_filter" value="disable"/>
-                     </pin_features>
-                  </pin>
-                  <pin peripheral="GPIOC" signal="GPIO, 13" pin_num="85" pin_signal="PTC13/UART4_CTS_b/FB_AD26">
-                     <pin_features>
-                        <pin_feature name="direction" value="INPUT"/>
-                        <pin_feature name="slew_rate" value="fast"/>
-                        <pin_feature name="open_drain" value="enable"/>
-                        <pin_feature name="drive_strength" value="low"/>
-                        <pin_feature name="pull_select" value="up"/>
-                        <pin_feature name="pull_enable" value="enable"/>
                         <pin_feature name="passive_filter" value="disable"/>
                      </pin_features>
                   </pin>

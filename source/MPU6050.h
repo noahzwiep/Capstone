@@ -39,6 +39,8 @@ THE SOFTWARE.
 
 #include "I2Cdev.h"
 #include "math.h"
+#include "helper_3dmath.h"
+
 
 // supporting link:  http://forum.arduino.cc/index.php?&topic=143444.msg1079517#msg1079517
 // also: http://forum.arduino.cc/index.php?&topic=141571.msg1062899#msg1062899s
@@ -829,10 +831,8 @@ class MPU6050 {
 		void PID(uint8_t ReadAddress, float kP,float kI, uint8_t Loops);  // Does the math
 		void PrintActiveOffsets(); // See the results of the Calibration
 
-
-
         // special methods for MotionApps 2.0 implementation
-        #ifdef MPU6050_INCLUDE_DMP_MOTIONAPPS20
+        //#ifdef MPU6050_INCLUDE_DMP_MOTIONAPPS20
 
             uint8_t dmpInitialize();
             bool dmpPacketAvailable();
@@ -929,7 +929,9 @@ class MPU6050 {
             void dmpOverrideQuaternion(long *q);
             uint16_t dmpGetFIFOPacketSize();
             uint8_t dmpGetCurrentFIFOPacket(uint8_t *data); // overflow proof
-        #endif
+
+            void delay_new(uint sec);
+        //#endif
 
         // special methods for MotionApps 4.1 implementation
         #ifdef MPU6050_INCLUDE_DMP_MOTIONAPPS41
