@@ -101,15 +101,15 @@ int8_t MasterReceive(uint32_t address, uint32_t subaddress, uint8_t * data, uint
 
 void TestMasterTransmit(void)
 {
-	uint8_t deviceAddress = 0x00U;
+	uint8_t deviceAddress = 0x01U;
 	uint32_t I2C_DATA_LENGTH = 33U;
 	uint8_t g_master_txBuff[I2C_DATA_LENGTH];
-    g_master_txBuff[0] = I2C_DATA_LENGTH - 1U;
+    g_master_txBuff[0] = 17;
     for (uint32_t i = 1U; i < I2C_DATA_LENGTH; i++)
     {
         g_master_txBuff[i] = i - 1;
     }
-	MasterTransmit(0x4, deviceAddress, g_master_txBuff, I2C_DATA_LENGTH);
+	MasterTransmit(0x2, deviceAddress, g_master_txBuff, I2C_DATA_LENGTH);
 }
 
 

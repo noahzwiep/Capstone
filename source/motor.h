@@ -26,8 +26,8 @@ typedef struct _FTM_Instance
 typedef enum _motor_direction
 {
 	eDirectionNotSet = 0U,
-	eDirectionClockwise = 1U,
-	eDirectionCounterClockwise = 2U,
+	eDirectionForward = 1U,
+	eDirectionReverse = 2U,
 	eTOTAL_DIRECTION_COUNT
 } motor_direction_t;
 
@@ -37,6 +37,13 @@ typedef enum _motors
 	eRightMotor = 1,
 	eTOTAL_MOTOR_COUNT
 } motor_t;
+
+typedef enum _limit_switches
+{
+	eLimitSwitchFrontLeft = 0U,
+	eLimitSwitchFrontRight = 1U,
+	eLIMIT_SWITCH_COUNT
+} limit_t;
 
 /* Get source clock for TPM driver */
 #define BOARD_TIMER_SOURCE_CLOCK CLOCK_GetFreq(kCLOCK_BusClk)
@@ -54,7 +61,9 @@ extern volatile uint16_t g_rightMotorPWM;
 extern volatile int64_t pulseCount[eTOTAL_MOTOR_COUNT];
 
 /*Function Definitions*/
-void MotorsInit(void);
+void InitializeMotors(void);
+void HomeMotor(motor_t motor, bool wait);
+void HomeMotors(bool wait);
 void UpdatePwm(motor_t motor, int32_t new_pwm);
 void UpdateMotorDirection(motor_t motor, motor_direction_t direction);
 void stopMotor(motor_t motor);
@@ -62,6 +71,9 @@ void turnDegrees(motor_t motor, int32_t degrees, uint16_t pwm);
 void turnDegreesPID(motor_t motor, int32_t degrees);
 void goToDegree(motor_t motor, int32_t degree);
 void goToDegreePID(motor_t motor, int32_t degree);
+
+void UpdateLimitSwitches(uint32_t pollingRate);
+bool isMotorHome(motor_t motor);
 
 #ifdef __cplusplus
 }

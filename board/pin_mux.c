@@ -24,12 +24,12 @@ pin_labels:
 - {pin_num: '73', pin_signal: CMP1_IN1/PTC3/LLWU_P7/SPI0_PCS1/UART1_RX/FTM0_CH2/CLKOUT/I2S0_TX_BCLK, label: 'J1[16]', identifier: LEFT_MOTOR_A}
 - {pin_num: '64', pin_signal: PTB18/CAN0_TX/FTM2_CH0/I2S0_TX_BCLK/FB_AD15/FTM2_QD_PHA, label: 'J1[1]'}
 - {pin_num: '65', pin_signal: PTB19/CAN0_RX/FTM2_CH1/I2S0_TX_FS/FB_OE_b/FTM2_QD_PHB, label: 'J1[3]'}
-- {pin_num: '71', pin_signal: ADC0_SE15/PTC1/LLWU_P6/SPI0_PCS3/UART1_RTS_b/FTM0_CH0/FB_AD13/I2S0_TXD0, label: 'J1[5]', identifier: AUTO_MODE}
-- {pin_num: '80', pin_signal: ADC1_SE4b/CMP0_IN2/PTC8/FTM3_CH4/I2S0_MCLK/FB_AD7, label: 'J1[7]', identifier: MANUAL_MODE}
-- {pin_num: '81', pin_signal: ADC1_SE5b/CMP0_IN3/PTC9/FTM3_CH5/I2S0_RX_BCLK/FB_AD6/FTM2_FLT0, label: 'J1[9]', identifier: FRONT_RIGHT_ACT}
+- {pin_num: '71', pin_signal: ADC0_SE15/PTC1/LLWU_P6/SPI0_PCS3/UART1_RTS_b/FTM0_CH0/FB_AD13/I2S0_TXD0, label: 'J1[5]', identifier: AUTO_MODE;FRONT_RIGHT_ACT}
+- {pin_num: '80', pin_signal: ADC1_SE4b/CMP0_IN2/PTC8/FTM3_CH4/I2S0_MCLK/FB_AD7, label: 'J1[7]', identifier: MANUAL_MODE;FRONT_LEFT_ACT}
+- {pin_num: '81', pin_signal: ADC1_SE5b/CMP0_IN3/PTC9/FTM3_CH5/I2S0_RX_BCLK/FB_AD6/FTM2_FLT0, label: 'J1[9]', identifier: FRONT_RIGHT_ACT;AUTO_MODE}
 - {pin_num: '77', pin_signal: PTC5/LLWU_P9/SPI0_SCK/LPTMR0_ALT2/I2S0_RXD0/FB_AD10/CMP0_OUT/FTM0_CH2, label: 'J1[15]', identifier: FRONT_LEFT_LIMIT}
 - {pin_num: '79', pin_signal: CMP0_IN1/PTC7/SPI0_SIN/USB_SOF_OUT/I2S0_RX_FS/FB_AD8, label: 'J1[13]', identifier: CMP0_IN1;FRONT_RIGHT_LIMIT}
-- {pin_num: '70', pin_signal: ADC0_SE14/PTC0/SPI0_PCS4/PDB0_EXTRG/USB_SOF_OUT/FB_AD14/I2S0_TXD1, label: 'J1[11]', identifier: FRONT_LEFT_ACT}
+- {pin_num: '70', pin_signal: ADC0_SE14/PTC0/SPI0_PCS4/PDB0_EXTRG/USB_SOF_OUT/FB_AD14/I2S0_TXD1, label: 'J1[11]', identifier: FRONT_LEFT_ACT;MANUAL_MODE}
 - {pin_num: '84', pin_signal: PTC12/UART4_RTS_b/FB_AD27/FTM3_FLT0, label: 'J2[2]', identifier: LEFT_MOTOR_B}
 - {pin_num: '76', pin_signal: PTC4/LLWU_P8/SPI0_PCS0/UART1_TX/FTM0_CH3/FB_AD11/CMP1_OUT, label: 'J2[4]', identifier: RIGHT_MOTOR_PWM}
 - {pin_num: '93', pin_signal: PTD0/LLWU_P12/SPI0_PCS0/UART2_RTS_b/FTM3_CH0/FB_ALE/FB_CS1_b/FB_TS_b, label: 'J2[6]', identifier: LEFT_MOTOR_FTM}
@@ -146,7 +146,7 @@ BOARD_InitPins:
   - {pin_num: '73', peripheral: GPIOC, signal: 'GPIO, 3', pin_signal: CMP1_IN1/PTC3/LLWU_P7/SPI0_PCS1/UART1_RX/FTM0_CH2/CLKOUT/I2S0_TX_BCLK, direction: OUTPUT}
   - {pin_num: '84', peripheral: GPIOC, signal: 'GPIO, 12', pin_signal: PTC12/UART4_RTS_b/FB_AD27/FTM3_FLT0, direction: OUTPUT}
   - {pin_num: '69', peripheral: GPIOB, signal: 'GPIO, 23', pin_signal: PTB23/SPI2_SIN/SPI0_PCS5/FB_AD28, direction: OUTPUT}
-  - {pin_num: '36', peripheral: GPIOA, signal: 'GPIO, 2', pin_signal: PTA2/UART0_TX/FTM0_CH7/JTAG_TDO/TRACE_SWO/EZP_DO, direction: OUTPUT}
+  - {pin_num: '36', peripheral: GPIOA, signal: 'GPIO, 2', pin_signal: PTA2/UART0_TX/FTM0_CH7/JTAG_TDO/TRACE_SWO/EZP_DO, direction: OUTPUT, pull_select: down, pull_enable: disable}
   - {pin_num: '72', peripheral: GPIOC, signal: 'GPIO, 2', pin_signal: ADC0_SE4b/CMP1_IN0/PTC2/SPI0_PCS2/UART1_CTS_b/FTM0_CH1/FB_AD12/I2S0_TX_FS, direction: OUTPUT}
   - {pin_num: '57', peripheral: GPIOB, signal: 'GPIO, 9', pin_signal: PTB9/SPI1_PCS1/UART3_CTS_b/FB_AD20, identifier: ENCODER1, direction: INPUT, gpio_interrupt: kPORT_InterruptFallingEdge,
     pull_select: up, pull_enable: enable}
@@ -154,26 +154,32 @@ BOARD_InitPins:
     drive_strength: low, pull_select: up}
   - {pin_num: '55', peripheral: ADC0, signal: 'SE, 12', pin_signal: ADC0_SE12/PTB2/I2C0_SCL/UART0_RTS_b/ENET0_1588_TMR0/FTM0_FLT3}
   - {pin_num: '94', peripheral: GPIOD, signal: 'GPIO, 1', pin_signal: ADC0_SE5b/PTD1/SPI0_SCK/UART2_CTS_b/FTM3_CH1/FB_CS0_b, direction: INPUT, gpio_interrupt: kPORT_InterruptFallingEdge,
-    pull_select: up}
+    pull_select: up, pull_enable: enable}
   - {pin_num: '96', peripheral: GPIOD, signal: 'GPIO, 3', pin_signal: PTD3/SPI0_SIN/UART2_TX/FTM3_CH3/FB_AD3/I2C0_SDA, identifier: FRONT_LEFT_RPM, direction: INPUT,
-    gpio_interrupt: kPORT_InterruptFallingEdge, pull_select: up}
+    gpio_interrupt: kPORT_InterruptFallingEdge, pull_select: up, pull_enable: enable}
   - {pin_num: '95', peripheral: GPIOD, signal: 'GPIO, 2', pin_signal: PTD2/LLWU_P13/SPI0_SOUT/UART2_RX/FTM3_CH2/FB_AD4/I2C0_SCL, identifier: REAR_RPM, direction: INPUT,
-    gpio_interrupt: kPORT_InterruptFallingEdge, pull_select: up}
+    gpio_interrupt: kPORT_InterruptFallingEdge, pull_select: up, pull_enable: enable}
   - {pin_num: '91', peripheral: UART3, signal: TX, pin_signal: PTC17/UART3_TX/ENET0_1588_TMR1/FB_CS4_b/FB_TSIZ0/FB_BE31_24_BLS7_0_b, identifier: GPS_TX, direction: OUTPUT}
   - {pin_num: '90', peripheral: UART3, signal: RX, pin_signal: PTC16/UART3_RX/ENET0_1588_TMR0/FB_CS5_b/FB_TSIZ1/FB_BE23_16_BLS15_8_b, identifier: GPS_RX}
   - {pin_num: '33', peripheral: GPIOE, signal: 'GPIO, 26', pin_signal: PTE26/ENET_1588_CLKIN/UART4_CTS_b/RTC_CLKOUT/USB_CLKIN, identifier: LED_ERROR, direction: OUTPUT}
-  - {pin_num: '77', peripheral: GPIOC, signal: 'GPIO, 5', pin_signal: PTC5/LLWU_P9/SPI0_SCK/LPTMR0_ALT2/I2S0_RXD0/FB_AD10/CMP0_OUT/FTM0_CH2, direction: INPUT, gpio_interrupt: kPORT_InterruptRisingEdge}
+  - {pin_num: '77', peripheral: GPIOC, signal: 'GPIO, 5', pin_signal: PTC5/LLWU_P9/SPI0_SCK/LPTMR0_ALT2/I2S0_RXD0/FB_AD10/CMP0_OUT/FTM0_CH2, direction: INPUT, gpio_interrupt: kPORT_InterruptFallingEdge,
+    pull_select: up, pull_enable: enable, passive_filter: enable}
   - {pin_num: '79', peripheral: GPIOC, signal: 'GPIO, 7', pin_signal: CMP0_IN1/PTC7/SPI0_SIN/USB_SOF_OUT/I2S0_RX_FS/FB_AD8, identifier: FRONT_RIGHT_LIMIT, direction: INPUT,
-    gpio_interrupt: kPORT_InterruptRisingEdge}
-  - {pin_num: '70', peripheral: GPIOC, signal: 'GPIO, 0', pin_signal: ADC0_SE14/PTC0/SPI0_PCS4/PDB0_EXTRG/USB_SOF_OUT/FB_AD14/I2S0_TXD1, direction: INPUT, gpio_interrupt: kPORT_InterruptRisingEdge}
-  - {pin_num: '81', peripheral: GPIOC, signal: 'GPIO, 9', pin_signal: ADC1_SE5b/CMP0_IN3/PTC9/FTM3_CH5/I2S0_RX_BCLK/FB_AD6/FTM2_FLT0, direction: INPUT, gpio_interrupt: kPORT_InterruptRisingEdge}
-  - {pin_num: '80', peripheral: GPIOC, signal: 'GPIO, 8', pin_signal: ADC1_SE4b/CMP0_IN2/PTC8/FTM3_CH4/I2S0_MCLK/FB_AD7, direction: INPUT, gpio_interrupt: kPORT_InterruptRisingEdge}
-  - {pin_num: '71', peripheral: GPIOC, signal: 'GPIO, 1', pin_signal: ADC0_SE15/PTC1/LLWU_P6/SPI0_PCS3/UART1_RTS_b/FTM0_CH0/FB_AD13/I2S0_TXD0, direction: INPUT, gpio_interrupt: kPORT_InterruptRisingEdge}
+    gpio_interrupt: kPORT_InterruptFallingEdge, pull_select: up, pull_enable: enable, passive_filter: enable}
+  - {pin_num: '70', peripheral: GPIOC, signal: 'GPIO, 0', pin_signal: ADC0_SE14/PTC0/SPI0_PCS4/PDB0_EXTRG/USB_SOF_OUT/FB_AD14/I2S0_TXD1, identifier: MANUAL_MODE,
+    direction: INPUT, gpio_interrupt: kPORT_InterruptFallingEdge, pull_select: up, pull_enable: enable, passive_filter: enable}
+  - {pin_num: '81', peripheral: GPIOC, signal: 'GPIO, 9', pin_signal: ADC1_SE5b/CMP0_IN3/PTC9/FTM3_CH5/I2S0_RX_BCLK/FB_AD6/FTM2_FLT0, identifier: AUTO_MODE, direction: INPUT,
+    gpio_interrupt: kPORT_InterruptFallingEdge, pull_select: up, pull_enable: enable, passive_filter: enable}
+  - {pin_num: '80', peripheral: GPIOC, signal: 'GPIO, 8', pin_signal: ADC1_SE4b/CMP0_IN2/PTC8/FTM3_CH4/I2S0_MCLK/FB_AD7, identifier: FRONT_LEFT_ACT, direction: INPUT,
+    gpio_interrupt: kPORT_InterruptFallingEdge, pull_select: up, pull_enable: enable}
+  - {pin_num: '71', peripheral: GPIOC, signal: 'GPIO, 1', pin_signal: ADC0_SE15/PTC1/LLWU_P6/SPI0_PCS3/UART1_RTS_b/FTM0_CH0/FB_AD13/I2S0_TXD0, identifier: FRONT_RIGHT_ACT,
+    direction: INPUT, gpio_interrupt: kPORT_InterruptFallingEdge, pull_select: up, pull_enable: enable}
   - {pin_num: '82', peripheral: GPIOC, signal: 'GPIO, 10', pin_signal: ADC1_SE6b/PTC10/I2C1_SCL/FTM3_CH6/I2S0_RX_FS/FB_AD5, direction: INPUT, gpio_interrupt: kPORT_InterruptFallingEdge,
-    pull_select: up}
+    pull_select: up, pull_enable: enable}
   - {pin_num: '83', peripheral: GPIOC, signal: 'GPIO, 11', pin_signal: ADC1_SE7b/PTC11/LLWU_P11/I2C1_SDA/FTM3_CH7/I2S0_RXD1/FB_RW_b, direction: INPUT, gpio_interrupt: kPORT_InterruptOrDMADisabled,
     pull_select: up}
-  - {pin_num: '59', peripheral: GPIOB, signal: 'GPIO, 11', pin_signal: ADC1_SE15/PTB11/SPI1_SCK/UART3_TX/FB_AD18/FTM0_FLT2, direction: INPUT, gpio_interrupt: kPORT_InterruptRisingEdge}
+  - {pin_num: '59', peripheral: GPIOB, signal: 'GPIO, 11', pin_signal: ADC1_SE15/PTB11/SPI1_SCK/UART3_TX/FB_AD18/FTM0_FLT2, direction: INPUT, gpio_interrupt: kPORT_InterruptRisingEdge,
+    pull_enable: enable}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -232,19 +238,19 @@ void BOARD_InitPins(void)
     /* Initialize GPIO functionality on pin PTB23 (pin 69)  */
     GPIO_PinInit(BOARD_RIGHT_MOTOR_A_GPIO, BOARD_RIGHT_MOTOR_A_PIN, &RIGHT_MOTOR_A_config);
 
-    gpio_pin_config_t FRONT_LEFT_ACT_config = {
+    gpio_pin_config_t MANUAL_MODE_config = {
         .pinDirection = kGPIO_DigitalInput,
         .outputLogic = 0U
     };
     /* Initialize GPIO functionality on pin PTC0 (pin 70)  */
-    GPIO_PinInit(BOARD_FRONT_LEFT_ACT_GPIO, BOARD_FRONT_LEFT_ACT_PIN, &FRONT_LEFT_ACT_config);
+    GPIO_PinInit(BOARD_MANUAL_MODE_GPIO, BOARD_MANUAL_MODE_PIN, &MANUAL_MODE_config);
 
-    gpio_pin_config_t AUTO_MODE_config = {
+    gpio_pin_config_t FRONT_RIGHT_ACT_config = {
         .pinDirection = kGPIO_DigitalInput,
         .outputLogic = 0U
     };
     /* Initialize GPIO functionality on pin PTC1 (pin 71)  */
-    GPIO_PinInit(BOARD_AUTO_MODE_GPIO, BOARD_AUTO_MODE_PIN, &AUTO_MODE_config);
+    GPIO_PinInit(BOARD_FRONT_RIGHT_ACT_GPIO, BOARD_FRONT_RIGHT_ACT_PIN, &FRONT_RIGHT_ACT_config);
 
     gpio_pin_config_t MOTOR_EN_config = {
         .pinDirection = kGPIO_DigitalOutput,
@@ -274,19 +280,19 @@ void BOARD_InitPins(void)
     /* Initialize GPIO functionality on pin PTC7 (pin 79)  */
     GPIO_PinInit(BOARD_FRONT_RIGHT_LIMIT_GPIO, BOARD_FRONT_RIGHT_LIMIT_PIN, &FRONT_RIGHT_LIMIT_config);
 
-    gpio_pin_config_t MANUAL_MODE_config = {
+    gpio_pin_config_t FRONT_LEFT_ACT_config = {
         .pinDirection = kGPIO_DigitalInput,
         .outputLogic = 0U
     };
     /* Initialize GPIO functionality on pin PTC8 (pin 80)  */
-    GPIO_PinInit(BOARD_MANUAL_MODE_GPIO, BOARD_MANUAL_MODE_PIN, &MANUAL_MODE_config);
+    GPIO_PinInit(BOARD_FRONT_LEFT_ACT_GPIO, BOARD_FRONT_LEFT_ACT_PIN, &FRONT_LEFT_ACT_config);
 
-    gpio_pin_config_t FRONT_RIGHT_ACT_config = {
+    gpio_pin_config_t AUTO_MODE_config = {
         .pinDirection = kGPIO_DigitalInput,
         .outputLogic = 0U
     };
     /* Initialize GPIO functionality on pin PTC9 (pin 81)  */
-    GPIO_PinInit(BOARD_FRONT_RIGHT_ACT_GPIO, BOARD_FRONT_RIGHT_ACT_PIN, &FRONT_RIGHT_ACT_config);
+    GPIO_PinInit(BOARD_AUTO_MODE_GPIO, BOARD_AUTO_MODE_PIN, &AUTO_MODE_config);
 
     gpio_pin_config_t RIGHT_ENCODER_1_config = {
         .pinDirection = kGPIO_DigitalInput,
@@ -358,11 +364,29 @@ void BOARD_InitPins(void)
     /* PORTA2 (pin 36) is configured as PTA2 */
     PORT_SetPinMux(BOARD_RIGHT_MOTOR_B_PORT, BOARD_RIGHT_MOTOR_B_PIN, kPORT_MuxAsGpio);
 
+    PORTA->PCR[2] = ((PORTA->PCR[2] &
+                      /* Mask bits to zero which are setting */
+                      (~(PORT_PCR_PS_MASK | PORT_PCR_PE_MASK | PORT_PCR_ISF_MASK)))
+
+                     /* Pull Select: Internal pulldown resistor is enabled on the corresponding pin, if the
+                      * corresponding PE field is set. */
+                     | PORT_PCR_PS(kPORT_PullDown)
+
+                     /* Pull Enable: Internal pullup or pulldown resistor is not enabled on the corresponding pin. */
+                     | PORT_PCR_PE(kPORT_PullDisable));
+
     /* PORTB11 (pin 59) is configured as PTB11 */
     PORT_SetPinMux(BOARD_MPU6050_INTERRUPT_PORT, BOARD_MPU6050_INTERRUPT_PIN, kPORT_MuxAsGpio);
 
     /* Interrupt configuration on PORTB11 (pin 59): Interrupt on rising edge */
     PORT_SetPinInterruptConfig(BOARD_MPU6050_INTERRUPT_PORT, BOARD_MPU6050_INTERRUPT_PIN, kPORT_InterruptRisingEdge);
+
+    PORTB->PCR[11] = ((PORTB->PCR[11] &
+                       /* Mask bits to zero which are setting */
+                       (~(PORT_PCR_PE_MASK | PORT_PCR_ISF_MASK)))
+
+                      /* Pull Enable: Internal pullup or pulldown resistor is enabled on the corresponding pin. */
+                      | (uint32_t)(PORT_PCR_PE_MASK));
 
     /* PORTB2 (pin 55) is configured as ADC0_SE12 */
     PORT_SetPinMux(BOARD_ADC0_SE12_PORT, BOARD_ADC0_SE12_PIN, kPORT_PinDisabledOrAnalog);
@@ -385,16 +409,37 @@ void BOARD_InitPins(void)
                      | (uint32_t)(kPORT_PullUp));
 
     /* PORTC0 (pin 70) is configured as PTC0 */
-    PORT_SetPinMux(BOARD_FRONT_LEFT_ACT_PORT, BOARD_FRONT_LEFT_ACT_PIN, kPORT_MuxAsGpio);
+    PORT_SetPinMux(BOARD_MANUAL_MODE_PORT, BOARD_MANUAL_MODE_PIN, kPORT_MuxAsGpio);
 
-    /* Interrupt configuration on PORTC0 (pin 70): Interrupt on rising edge */
-    PORT_SetPinInterruptConfig(BOARD_FRONT_LEFT_ACT_PORT, BOARD_FRONT_LEFT_ACT_PIN, kPORT_InterruptRisingEdge);
+    /* Interrupt configuration on PORTC0 (pin 70): Interrupt on falling edge */
+    PORT_SetPinInterruptConfig(BOARD_MANUAL_MODE_PORT, BOARD_MANUAL_MODE_PIN, kPORT_InterruptFallingEdge);
+
+    PORTC->PCR[0] = ((PORTC->PCR[0] &
+                      /* Mask bits to zero which are setting */
+                      (~(PORT_PCR_PS_MASK | PORT_PCR_PE_MASK | PORT_PCR_PFE_MASK | PORT_PCR_ISF_MASK)))
+
+                     /* Pull Select: Internal pullup resistor is enabled on the corresponding pin, if the
+                      * corresponding PE field is set. */
+                     | (uint32_t)(kPORT_PullUp)
+
+                     /* Passive Filter Enable: Passive input filter is enabled on the corresponding pin, if the
+                      * pin is configured as a digital input.
+                      * Refer to the device data sheet for filter characteristics. */
+                     | PORT_PCR_PFE(kPORT_PassiveFilterEnable));
 
     /* PORTC1 (pin 71) is configured as PTC1 */
-    PORT_SetPinMux(BOARD_AUTO_MODE_PORT, BOARD_AUTO_MODE_PIN, kPORT_MuxAsGpio);
+    PORT_SetPinMux(BOARD_FRONT_RIGHT_ACT_PORT, BOARD_FRONT_RIGHT_ACT_PIN, kPORT_MuxAsGpio);
 
-    /* Interrupt configuration on PORTC1 (pin 71): Interrupt on rising edge */
-    PORT_SetPinInterruptConfig(BOARD_AUTO_MODE_PORT, BOARD_AUTO_MODE_PIN, kPORT_InterruptRisingEdge);
+    /* Interrupt configuration on PORTC1 (pin 71): Interrupt on falling edge */
+    PORT_SetPinInterruptConfig(BOARD_FRONT_RIGHT_ACT_PORT, BOARD_FRONT_RIGHT_ACT_PIN, kPORT_InterruptFallingEdge);
+
+    PORTC->PCR[1] = ((PORTC->PCR[1] &
+                      /* Mask bits to zero which are setting */
+                      (~(PORT_PCR_PS_MASK | PORT_PCR_PE_MASK | PORT_PCR_ISF_MASK)))
+
+                     /* Pull Select: Internal pullup resistor is enabled on the corresponding pin, if the
+                      * corresponding PE field is set. */
+                     | (uint32_t)(kPORT_PullUp));
 
     /* PORTC10 (pin 82) is configured as PTC10 */
     PORT_SetPinMux(BOARD_RIGHT_ENCODER_1_PORT, BOARD_RIGHT_ENCODER_1_PIN, kPORT_MuxAsGpio);
@@ -404,11 +449,11 @@ void BOARD_InitPins(void)
 
     PORTC->PCR[10] = ((PORTC->PCR[10] &
                        /* Mask bits to zero which are setting */
-                       (~(PORT_PCR_PS_MASK | PORT_PCR_ISF_MASK)))
+                       (~(PORT_PCR_PS_MASK | PORT_PCR_PE_MASK | PORT_PCR_ISF_MASK)))
 
                       /* Pull Select: Internal pullup resistor is enabled on the corresponding pin, if the
                        * corresponding PE field is set. */
-                      | PORT_PCR_PS(kPORT_PullUp));
+                      | (uint32_t)(kPORT_PullUp));
 
     /* PORTC11 (pin 83) is configured as PTC11 */
     PORT_SetPinMux(BOARD_RIGHT_ENCODER_2_PORT, BOARD_RIGHT_ENCODER_2_PIN, kPORT_MuxAsGpio);
@@ -445,26 +490,73 @@ void BOARD_InitPins(void)
     /* PORTC5 (pin 77) is configured as PTC5 */
     PORT_SetPinMux(BOARD_FRONT_LEFT_LIMIT_PORT, BOARD_FRONT_LEFT_LIMIT_PIN, kPORT_MuxAsGpio);
 
-    /* Interrupt configuration on PORTC5 (pin 77): Interrupt on rising edge */
-    PORT_SetPinInterruptConfig(BOARD_FRONT_LEFT_LIMIT_PORT, BOARD_FRONT_LEFT_LIMIT_PIN, kPORT_InterruptRisingEdge);
+    /* Interrupt configuration on PORTC5 (pin 77): Interrupt on falling edge */
+    PORT_SetPinInterruptConfig(BOARD_FRONT_LEFT_LIMIT_PORT, BOARD_FRONT_LEFT_LIMIT_PIN, kPORT_InterruptFallingEdge);
+
+    PORTC->PCR[5] = ((PORTC->PCR[5] &
+                      /* Mask bits to zero which are setting */
+                      (~(PORT_PCR_PS_MASK | PORT_PCR_PE_MASK | PORT_PCR_PFE_MASK | PORT_PCR_ISF_MASK)))
+
+                     /* Pull Select: Internal pullup resistor is enabled on the corresponding pin, if the
+                      * corresponding PE field is set. */
+                     | (uint32_t)(kPORT_PullUp)
+
+                     /* Passive Filter Enable: Passive input filter is enabled on the corresponding pin, if the
+                      * pin is configured as a digital input.
+                      * Refer to the device data sheet for filter characteristics. */
+                     | PORT_PCR_PFE(kPORT_PassiveFilterEnable));
 
     /* PORTC7 (pin 79) is configured as PTC7 */
     PORT_SetPinMux(BOARD_FRONT_RIGHT_LIMIT_PORT, BOARD_FRONT_RIGHT_LIMIT_PIN, kPORT_MuxAsGpio);
 
-    /* Interrupt configuration on PORTC7 (pin 79): Interrupt on rising edge */
-    PORT_SetPinInterruptConfig(BOARD_FRONT_RIGHT_LIMIT_PORT, BOARD_FRONT_RIGHT_LIMIT_PIN, kPORT_InterruptRisingEdge);
+    /* Interrupt configuration on PORTC7 (pin 79): Interrupt on falling edge */
+    PORT_SetPinInterruptConfig(BOARD_FRONT_RIGHT_LIMIT_PORT, BOARD_FRONT_RIGHT_LIMIT_PIN, kPORT_InterruptFallingEdge);
+
+    PORTC->PCR[7] = ((PORTC->PCR[7] &
+                      /* Mask bits to zero which are setting */
+                      (~(PORT_PCR_PS_MASK | PORT_PCR_PE_MASK | PORT_PCR_PFE_MASK | PORT_PCR_ISF_MASK)))
+
+                     /* Pull Select: Internal pullup resistor is enabled on the corresponding pin, if the
+                      * corresponding PE field is set. */
+                     | (uint32_t)(kPORT_PullUp)
+
+                     /* Passive Filter Enable: Passive input filter is enabled on the corresponding pin, if the
+                      * pin is configured as a digital input.
+                      * Refer to the device data sheet for filter characteristics. */
+                     | PORT_PCR_PFE(kPORT_PassiveFilterEnable));
 
     /* PORTC8 (pin 80) is configured as PTC8 */
-    PORT_SetPinMux(BOARD_MANUAL_MODE_PORT, BOARD_MANUAL_MODE_PIN, kPORT_MuxAsGpio);
+    PORT_SetPinMux(BOARD_FRONT_LEFT_ACT_PORT, BOARD_FRONT_LEFT_ACT_PIN, kPORT_MuxAsGpio);
 
-    /* Interrupt configuration on PORTC8 (pin 80): Interrupt on rising edge */
-    PORT_SetPinInterruptConfig(BOARD_MANUAL_MODE_PORT, BOARD_MANUAL_MODE_PIN, kPORT_InterruptRisingEdge);
+    /* Interrupt configuration on PORTC8 (pin 80): Interrupt on falling edge */
+    PORT_SetPinInterruptConfig(BOARD_FRONT_LEFT_ACT_PORT, BOARD_FRONT_LEFT_ACT_PIN, kPORT_InterruptFallingEdge);
+
+    PORTC->PCR[8] = ((PORTC->PCR[8] &
+                      /* Mask bits to zero which are setting */
+                      (~(PORT_PCR_PS_MASK | PORT_PCR_PE_MASK | PORT_PCR_ISF_MASK)))
+
+                     /* Pull Select: Internal pullup resistor is enabled on the corresponding pin, if the
+                      * corresponding PE field is set. */
+                     | (uint32_t)(kPORT_PullUp));
 
     /* PORTC9 (pin 81) is configured as PTC9 */
-    PORT_SetPinMux(BOARD_FRONT_RIGHT_ACT_PORT, BOARD_FRONT_RIGHT_ACT_PIN, kPORT_MuxAsGpio);
+    PORT_SetPinMux(BOARD_AUTO_MODE_PORT, BOARD_AUTO_MODE_PIN, kPORT_MuxAsGpio);
 
-    /* Interrupt configuration on PORTC9 (pin 81): Interrupt on rising edge */
-    PORT_SetPinInterruptConfig(BOARD_FRONT_RIGHT_ACT_PORT, BOARD_FRONT_RIGHT_ACT_PIN, kPORT_InterruptRisingEdge);
+    /* Interrupt configuration on PORTC9 (pin 81): Interrupt on falling edge */
+    PORT_SetPinInterruptConfig(BOARD_AUTO_MODE_PORT, BOARD_AUTO_MODE_PIN, kPORT_InterruptFallingEdge);
+
+    PORTC->PCR[9] = ((PORTC->PCR[9] &
+                      /* Mask bits to zero which are setting */
+                      (~(PORT_PCR_PS_MASK | PORT_PCR_PE_MASK | PORT_PCR_PFE_MASK | PORT_PCR_ISF_MASK)))
+
+                     /* Pull Select: Internal pullup resistor is enabled on the corresponding pin, if the
+                      * corresponding PE field is set. */
+                     | (uint32_t)(kPORT_PullUp)
+
+                     /* Passive Filter Enable: Passive input filter is enabled on the corresponding pin, if the
+                      * pin is configured as a digital input.
+                      * Refer to the device data sheet for filter characteristics. */
+                     | PORT_PCR_PFE(kPORT_PassiveFilterEnable));
 
     /* PORTD0 (pin 93) is configured as FTM3_CH0 */
     PORT_SetPinMux(BOARD_LEFT_MOTOR_FTM_PORT, BOARD_LEFT_MOTOR_FTM_PIN, kPORT_MuxAlt4);
@@ -477,11 +569,11 @@ void BOARD_InitPins(void)
 
     PORTD->PCR[1] = ((PORTD->PCR[1] &
                       /* Mask bits to zero which are setting */
-                      (~(PORT_PCR_PS_MASK | PORT_PCR_ISF_MASK)))
+                      (~(PORT_PCR_PS_MASK | PORT_PCR_PE_MASK | PORT_PCR_ISF_MASK)))
 
                      /* Pull Select: Internal pullup resistor is enabled on the corresponding pin, if the
                       * corresponding PE field is set. */
-                     | PORT_PCR_PS(kPORT_PullUp));
+                     | (uint32_t)(kPORT_PullUp));
 
     /* PORTD2 (pin 95) is configured as PTD2 */
     PORT_SetPinMux(BOARD_REAR_RPM_PORT, BOARD_REAR_RPM_PIN, kPORT_MuxAsGpio);
@@ -491,11 +583,11 @@ void BOARD_InitPins(void)
 
     PORTD->PCR[2] = ((PORTD->PCR[2] &
                       /* Mask bits to zero which are setting */
-                      (~(PORT_PCR_PS_MASK | PORT_PCR_ISF_MASK)))
+                      (~(PORT_PCR_PS_MASK | PORT_PCR_PE_MASK | PORT_PCR_ISF_MASK)))
 
                      /* Pull Select: Internal pullup resistor is enabled on the corresponding pin, if the
                       * corresponding PE field is set. */
-                     | PORT_PCR_PS(kPORT_PullUp));
+                     | (uint32_t)(kPORT_PullUp));
 
     /* PORTD3 (pin 96) is configured as PTD3 */
     PORT_SetPinMux(BOARD_FRONT_LEFT_RPM_PORT, BOARD_FRONT_LEFT_RPM_PIN, kPORT_MuxAsGpio);
@@ -505,11 +597,11 @@ void BOARD_InitPins(void)
 
     PORTD->PCR[3] = ((PORTD->PCR[3] &
                       /* Mask bits to zero which are setting */
-                      (~(PORT_PCR_PS_MASK | PORT_PCR_ISF_MASK)))
+                      (~(PORT_PCR_PS_MASK | PORT_PCR_PE_MASK | PORT_PCR_ISF_MASK)))
 
                      /* Pull Select: Internal pullup resistor is enabled on the corresponding pin, if the
                       * corresponding PE field is set. */
-                     | PORT_PCR_PS(kPORT_PullUp));
+                     | (uint32_t)(kPORT_PullUp));
 
     /* PORTE26 (pin 33) is configured as PTE26 */
     PORT_SetPinMux(BOARD_LED_ERROR_PORT, BOARD_LED_ERROR_PIN, kPORT_MuxAsGpio);

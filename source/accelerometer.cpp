@@ -32,7 +32,8 @@ bool InitializeAccelerometer(void)
     GPIO_PinInit(BOARD_MPU6050_INTERRUPT_GPIO, BOARD_MPU6050_INTERRUPT_PIN, &general_config);
 
     //Uncomment this if you want to test the i2c line
-    //TestMasterTransmit();
+    //for(uint8_t i = 0; i < 1000; i++)
+    //	TestMasterTransmit();
 
 	mpu.initialize();
 	bool isProperlyConnected = mpu.testConnection();

@@ -32,10 +32,76 @@ component:
 #include "peripherals.h"
 
 /***********************************************************************************************************************
+ * BOARD_InitPeripherals functional group
+ **********************************************************************************************************************/
+/***********************************************************************************************************************
+ * UART_3 initialization code
+ **********************************************************************************************************************/
+/* clang-format off */
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+instance:
+- name: 'UART_3'
+- type: 'uart'
+- mode: 'interrupts'
+- type_id: 'uart_cd31a12aa8c79051fda42cc851a27c37'
+- functional_group: 'BOARD_InitPeripherals'
+- peripheral: 'UART3'
+- config_sets:
+  - uartConfig_t:
+    - uartConfig:
+      - clockSource: 'BusInterfaceClock'
+      - clockSourceFreq: 'GetFreq'
+      - baudRate_Bps: '115200'
+      - parityMode: 'kUART_ParityDisabled'
+      - stopBitCount: 'kUART_OneStopBit'
+      - txFifoWatermark: '0'
+      - rxFifoWatermark: '1'
+      - idleType: 'kUART_IdleTypeStartBit'
+      - enableTx: 'true'
+      - enableRx: 'true'
+    - quick_selection: 'QuickSelection1'
+  - interruptsCfg:
+    - interrupts: 'kUART_TxDataRegEmptyInterruptEnable kUART_TransmissionCompleteInterruptEnable kUART_RxDataRegFullInterruptEnable kUART_RxOverrunInterruptEnable'
+    - interrupt_vectors:
+      - enable_rx_tx_irq: 'true'
+      - interrupt_rx_tx:
+        - IRQn: 'UART3_RX_TX_IRQn'
+        - enable_priority: 'false'
+        - priority: '0'
+        - enable_custom_name: 'false'
+      - enable_err_irq: 'false'
+      - interrupt_err:
+        - IRQn: 'UART3_ERR_IRQn'
+        - enable_priority: 'false'
+        - priority: '0'
+        - enable_custom_name: 'false'
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+/* clang-format on */
+const uart_config_t UART_3_config = {
+  .baudRate_Bps = 115200,
+  .parityMode = kUART_ParityDisabled,
+  .stopBitCount = kUART_OneStopBit,
+  .txFifoWatermark = 0,
+  .rxFifoWatermark = 1,
+  .idleType = kUART_IdleTypeStartBit,
+  .enableTx = true,
+  .enableRx = true
+};
+
+void UART_3_init(void) {
+  UART_Init(UART_3_PERIPHERAL, &UART_3_config, UART_3_CLOCK_SOURCE);
+  UART_EnableInterrupts(UART_3_PERIPHERAL, kUART_TxDataRegEmptyInterruptEnable | kUART_TransmissionCompleteInterruptEnable | kUART_RxDataRegFullInterruptEnable | kUART_RxOverrunInterruptEnable);
+  /* Enable interrupt UART3_RX_TX_IRQn request in the NVIC */
+  EnableIRQ(UART_3_SERIAL_RX_TX_IRQN);
+}
+
+/***********************************************************************************************************************
  * Initialization functions
  **********************************************************************************************************************/
 void BOARD_InitPeripherals(void)
 {
+  /* Initialize components */
+  UART_3_init();
 }
 
 /***********************************************************************************************************************

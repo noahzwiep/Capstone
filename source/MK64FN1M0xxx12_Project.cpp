@@ -42,49 +42,11 @@
 #include "motor.h"
 #include "potentiometer.h"
 #include "accelerometer.h"
+#include "manual_controls.h"
+#include "axle_rpm.h"
+#include "gps.h"
+#include "IrqHandler.h"
 
-/*******************************************************************************
- * Definitions
- ******************************************************************************/
-/* The Flextimer instance/channel used for board */
-#define FTM_5kHz_BASEADDR FTM1
-#define FTM_10kHz_BASEADDR FTM2
-
-/* Interrupt number and interrupt handler for the FTM instance used */
-#define FTM_5kHz_IRQ_NUM FTM1_IRQn
-#define FTM_5kHz_HANDLER FTM1_IRQHandler
-
-#define FTM_10kHz_IRQ_NUM FTM2_IRQn
-#define FTM_10kHz_HANDLER FTM2_IRQHandler
-
-/* Get source clock for FTM driver */
-#define INTERRUPT_SOURCE_CLOCK CLOCK_GetFreq(kCLOCK_BusClk)
-
-
-bool b5kHzFlag = false;
-bool b10kHzFlag = false;
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-void FTM_5kHz_HANDLER(void)
-{
-    /* Clear interrupt flag.*/
-    FTM_ClearStatusFlags(FTM_5kHz_BASEADDR, kFTM_TimeOverflowFlag);
-    b5kHzFlag = true;
-    __DSB();
-}
-
-void FTM_10kHz_HANDLER(void)
-{
-    /* Clear interrupt flag.*/
-    FTM_ClearStatusFlags(FTM_10kHz_BASEADDR, kFTM_TimeOverflowFlag);
-    b10kHzFlag = true;
-    __DSB();
-}
-#ifdef __cplusplus
-}
-#endif
 
 void InitializeTimers(void)
 {
@@ -115,6 +77,10 @@ void InitializeTimers(void)
     EnableIRQ(FTM_10kHz_IRQ_NUM);
 
     FTM_StartTimer(FTM_10kHz_BASEADDR, kFTM_SystemClock);
+
+    /*Setup 1kHz Interrupt*/
+    SysTick_Config(SystemCoreClock / 1000U);
+
 }
 
 
@@ -140,18 +106,70 @@ int main(void) {
   	/* Init FSL debug console. */
     BOARD_InitDebugConsole();
 
-    MotorsInit();
-    InitializePot();
+    /*Initialize Timer Interrupts*/
     InitializeTimers();
 
-    bool accelInit = InitializeAccelerometer();
-    if(accelInit){
+    /*Initialize Hardware*/
+    InitializePot();
+    InitializeManualControls();
+    //InitializeAxleRpm();
+    bool bInitAccel = InitializeAccelerometer();
+    if(!bInitAccel){
     	while(1){}
     }
+    InitializeMotors();
 
+
+    /*Main Processing Loop*/
     uint32_t potValue = 0;
+    bool leftManualOverride = false;
+    bool rightManualOverride = false;
+    bool manualMode = false;
+    bool autoMode = false;
+    bool bHomeRequired = false;
+    bool bError = false;
     while(1) {
+    	if(b1kHzFlag){
+    		bError = false;
+
+    		/*Update Button Debouncing with rate of 1ms*/
+    		UpdateLimitSwitches(1);
+    		UpdateManualControls(1);
+
+    		if(isMotorHome(eLeftMotor)){
+    			pulseCount[eLeftMotor] = 0;
+    		} else{
+    			if(pulseCount[eLeftMotor] == 0){
+    				bError = true;
+    			}
+    		}
+    		if(isMotorHome(eRightMotor)){
+    			pulseCount[eRightMotor] = 0;
+    		} else{
+    			if(pulseCount[eRightMotor] == 0){
+    				bError = true;
+    			}
+    		}
+
+        	GPIO_PinWrite(BOARD_LED_ERROR_GPIO, BOARD_LED_ERROR_PIN, bError ? 1 : 0);
+    		b1kHzFlag = false;
+    	}
     	if(b5kHzFlag){
+    		getManualControlValues(&leftManualOverride, &rightManualOverride, &manualMode, &autoMode);
+
+    		if(manualMode || autoMode){
+    			goToDegreePID(eLeftMotor, leftManualOverride ? 150 : 0);
+    			goToDegreePID(eRightMotor, rightManualOverride ? 150 : 0);
+
+    			bHomeRequired = true;
+    		}
+    		else{
+    			if(bHomeRequired){
+    				HomeMotors(false);
+    				bHomeRequired = false;
+    			}
+    		}
+
     		//goToDegreePID(eLeftMotor, potValue*312/3290);
     		//goToDegreePID(eRightMotor, potValue*312/3290);
     		b5kHzFlag = false;

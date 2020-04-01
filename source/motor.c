@@ -3,12 +3,16 @@
 motor_direction_t g_motorDirection[eTOTAL_MOTOR_COUNT] = {eDirectionNotSet, eDirectionNotSet};
 volatile uint16_t g_motorPwm[eTOTAL_MOTOR_COUNT] = {0, 0};
 volatile int64_t pulseCount[eTOTAL_MOTOR_COUNT] = {0,0};
+uint8_t stateCount[eLIMIT_SWITCH_COUNT] = {0,0};
+
+/*The motors initialize to home position, which is why this is true*/
+bool debouncedLimitState[eLIMIT_SWITCH_COUNT] = {true, true};
 
 FTM_Instance_t LEFT_FTM;
 FTM_Instance_t RIGHT_FTM;
 FTM_Instance_t ftmStructs[eTOTAL_MOTOR_COUNT];
 
-int64_t previousError = 0;
+int64_t previousError[eTOTAL_MOTOR_COUNT] = {0,0};
 
 void BOARD_FTM_LEFT_IRQ_HANDLER(void)
 {
@@ -96,8 +100,8 @@ static void InitializeLimitSwitchGPIO(void)
         kGPIO_DigitalInput, 0,
     };
 
-    PORT_SetPinInterruptConfig(BOARD_FRONT_LEFT_LIMIT_PORT, BOARD_FRONT_LEFT_LIMIT_PIN, kPORT_InterruptRisingEdge);
-    PORT_SetPinInterruptConfig(BOARD_FRONT_RIGHT_LIMIT_PORT, BOARD_FRONT_RIGHT_LIMIT_PIN, kPORT_InterruptRisingEdge);
+    PORT_SetPinInterruptConfig(BOARD_FRONT_LEFT_LIMIT_PORT, BOARD_FRONT_LEFT_LIMIT_PIN, kPORT_InterruptFallingEdge);
+    PORT_SetPinInterruptConfig(BOARD_FRONT_RIGHT_LIMIT_PORT, BOARD_FRONT_RIGHT_LIMIT_PIN, kPORT_InterruptFallingEdge);
 
     EnableIRQ(PORTC_IRQn);
 
@@ -105,7 +109,7 @@ static void InitializeLimitSwitchGPIO(void)
     GPIO_PinInit(BOARD_FRONT_RIGHT_LIMIT_GPIO, BOARD_FRONT_RIGHT_LIMIT_PIN, &general_config);
 }
 
-void MotorsInit(void)
+void InitializeMotors(void)
 {
     LEFT_FTM.FTM_BASEADDR 		= FTM3;
     LEFT_FTM.FTM_CHANNEL 		= kFTM_Chnl_0;
@@ -127,26 +131,121 @@ void MotorsInit(void)
     InitializeMotorGPIO();
     InitializeLimitSwitchGPIO();
 
-    UpdateMotorDirection(eLeftMotor, eDirectionClockwise);
-    UpdateMotorDirection(eRightMotor, eDirectionClockwise);
+    UpdateMotorDirection(eLeftMotor, eDirectionForward);
+    UpdateMotorDirection(eRightMotor, eDirectionForward);
 	GPIO_PinWrite(BOARD_MOTOR_EN_GPIO, BOARD_MOTOR_EN_PIN, 1);
+
+	HomeMotors(true);
+}
+
+void HomeMotor(motor_t motor, bool wait)
+{
+	switch(motor){
+		case eLeftMotor:
+			if(GPIO_PinRead(BOARD_FRONT_LEFT_LIMIT_GPIO, BOARD_FRONT_LEFT_LIMIT_PIN) == 1){
+				UpdatePwm(motor, -20);
+				if(wait)
+					while(GPIO_PinRead(BOARD_FRONT_LEFT_LIMIT_GPIO, BOARD_FRONT_LEFT_LIMIT_PIN) == 1);
+			}
+			break;
+		case eRightMotor:
+			if(GPIO_PinRead(BOARD_FRONT_RIGHT_LIMIT_GPIO, BOARD_FRONT_RIGHT_LIMIT_PIN) == 1){
+				UpdatePwm(motor, -20);
+				if(wait)
+					while(GPIO_PinRead(BOARD_FRONT_RIGHT_LIMIT_GPIO, BOARD_FRONT_RIGHT_LIMIT_PIN) == 1);
+			}
+			break;
+		default:
+			break;
+	}
+}
+
+void HomeMotors(bool wait)
+{
+	bool leftAtLimit = GPIO_PinRead(BOARD_FRONT_LEFT_LIMIT_GPIO, BOARD_FRONT_LEFT_LIMIT_PIN) == 0;
+	bool rightAtLimit = GPIO_PinRead(BOARD_FRONT_RIGHT_LIMIT_GPIO, BOARD_FRONT_RIGHT_LIMIT_PIN) == 0;
+
+	/*Make the motors start turning till they hit limit switch*/
+	if(!leftAtLimit)
+		UpdatePwm(eLeftMotor, -20);
+	if(!rightAtLimit)
+		UpdatePwm(eRightMotor, -20);
+
+	if(wait){
+		/*Limit switch will go low when pressed down, interrupt handler handles stopping the motor
+		 * Make sure we wait till we 'zero' the motors at their limtis*/
+		while(!leftAtLimit || !rightAtLimit){
+			leftAtLimit = GPIO_PinRead(BOARD_FRONT_LEFT_LIMIT_GPIO, BOARD_FRONT_LEFT_LIMIT_PIN) == 0;
+			rightAtLimit = GPIO_PinRead(BOARD_FRONT_RIGHT_LIMIT_GPIO, BOARD_FRONT_RIGHT_LIMIT_PIN) == 0;
+		}
+	}
+}
+
+#define REGISTER_TRUE_MSEC 100
+#define REGISTER_FALSE_MSEC 1
+void LimitSwitchDebounce(limit_t limitSwitch, uint32_t pollingRate){
+	bool rawState = false;
+	switch(limitSwitch){
+		case eLimitSwitchFrontLeft:
+			rawState = GPIO_PinRead(BOARD_FRONT_LEFT_LIMIT_GPIO, BOARD_FRONT_LEFT_LIMIT_PIN) == 0;
+			break;
+		case eLimitSwitchFrontRight:
+			rawState = GPIO_PinRead(BOARD_FRONT_RIGHT_LIMIT_GPIO, BOARD_FRONT_RIGHT_LIMIT_PIN) == 0;
+			break;
+		default:
+			break;
+	}
+	if(rawState == debouncedLimitState[limitSwitch]){
+		/*Set count required for a true to become false when state=true, or a false to become true when state=false*/
+		stateCount[limitSwitch] = debouncedLimitState[limitSwitch] ? (REGISTER_FALSE_MSEC / pollingRate) : (REGISTER_TRUE_MSEC / pollingRate);
+	}
+	else{
+		if(--stateCount[limitSwitch] == 0){
+			debouncedLimitState[limitSwitch] = rawState;
+			stateCount[limitSwitch] = debouncedLimitState[limitSwitch] ? (REGISTER_FALSE_MSEC / pollingRate) : (REGISTER_TRUE_MSEC / pollingRate);
+		}
+	}
+}
+
+
+void UpdateLimitSwitches(uint32_t pollingRate)
+{
+	limit_t limitSwitch;
+
+	for(limitSwitch = eLimitSwitchFrontLeft; limitSwitch < eLIMIT_SWITCH_COUNT; limitSwitch++){
+		LimitSwitchDebounce(limitSwitch, pollingRate);
+	}
+}
+
+bool isMotorHome(motor_t motor)
+{
+	switch(motor){
+		case eLeftMotor:
+			return debouncedLimitState[eLimitSwitchFrontLeft];
+			break;
+		case eRightMotor:
+			return debouncedLimitState[eLimitSwitchFrontRight];
+			break;
+		default:
+			return false;
+	}
 }
 
 void UpdatePwm(motor_t motor, int32_t new_pwm)
 {
 	FTM_Instance_t ftm_instance;
-	motor_direction_t direction;
+	motor_direction_t direction = g_motorDirection[motor];
 
 	if(new_pwm != 0){
-		direction = (new_pwm > 0) ? eDirectionClockwise : eDirectionCounterClockwise;
+		direction = (new_pwm > 0) ? eDirectionForward : eDirectionReverse;
 	}
 
 	new_pwm = abs(new_pwm);
 	if(new_pwm >= 100){
 		new_pwm = 99;
 	}
-	else if(new_pwm < 15){
-		new_pwm = 0;
+	else if(new_pwm < 15 && new_pwm != 0){
+		new_pwm = 15;
 	}
 
 	ftm_instance = ftmStructs[motor];
@@ -164,7 +263,8 @@ void UpdatePwm(motor_t motor, int32_t new_pwm)
     /* Start channel output with updated dutycycle */
     FTM_UpdateChnlEdgeLevelSelect(ftm_instance.FTM_BASEADDR, ftm_instance.FTM_CHANNEL, kFTM_HighTrue);
 
-	UpdateMotorDirection(motor, direction);
+    if(new_pwm != 0)
+    	UpdateMotorDirection(motor, direction);
 }
 
 
@@ -185,10 +285,11 @@ void UpdateMotorDirection(motor_t motor, motor_direction_t direction)
 			break;
 		case eRightMotor:
 			if(direction == g_motorDirection[eRightMotor]) return;
-			gpio_base_a = BOARD_RIGHT_MOTOR_A_GPIO;
-			gpio_base_b = BOARD_RIGHT_MOTOR_B_GPIO;
-			gpio_pin_a = BOARD_RIGHT_MOTOR_A_PIN;
-			gpio_pin_b = BOARD_RIGHT_MOTOR_B_PIN;
+			//Right has a's and b's switched as it is mounted mirrored
+			gpio_base_a = BOARD_RIGHT_MOTOR_B_GPIO;
+			gpio_base_b = BOARD_RIGHT_MOTOR_A_GPIO;
+			gpio_pin_a = BOARD_RIGHT_MOTOR_B_PIN;
+			gpio_pin_b = BOARD_RIGHT_MOTOR_A_PIN;
 			g_motorDirection[eRightMotor] = direction;
 			break;
 		default:
@@ -197,11 +298,11 @@ void UpdateMotorDirection(motor_t motor, motor_direction_t direction)
 
 	switch(direction)
 	{
-		case eDirectionClockwise:
+		case eDirectionForward:
 		    GPIO_PinWrite(gpio_base_a, gpio_pin_a, 1);
 			GPIO_PinWrite(gpio_base_b, gpio_pin_b, 0);
 			break;
-		case eDirectionCounterClockwise:
+		case eDirectionReverse:
 		    GPIO_PinWrite(gpio_base_a, gpio_pin_a, 0);
 			GPIO_PinWrite(gpio_base_b, gpio_pin_b, 1);
 			break;
@@ -273,9 +374,9 @@ void goToDegreePID(motor_t motor, int32_t degree)
 
 	error 	= finalPulseCount - pulseCount[motor];
 	integral = integral + error*Ts;
-	derivative = (error-previousError) / Ts;
+	derivative = (error-previousError[motor]) / Ts;
 	newPwm 	= (int32_t)(Kp*error + Ki*integral + Kd*derivative);
 	UpdatePwm(motor, newPwm);
 
-	previousError = error;
+	previousError[motor] = error;
 }

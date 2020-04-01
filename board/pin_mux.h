@@ -148,31 +148,31 @@ void BOARD_InitBootPins(void);
 
 /*! @name PORTC0 (number 70), J1[11]
   @{ */
-#define BOARD_FRONT_LEFT_ACT_GPIO GPIOC /*!<@brief GPIO device name: GPIOC */
-#define BOARD_FRONT_LEFT_ACT_PORT PORTC /*!<@brief PORT device name: PORTC */
-#define BOARD_FRONT_LEFT_ACT_PIN 0U     /*!<@brief PORTC pin index: 0 */
-                                        /* @} */
+#define BOARD_MANUAL_MODE_GPIO GPIOC /*!<@brief GPIO device name: GPIOC */
+#define BOARD_MANUAL_MODE_PORT PORTC /*!<@brief PORT device name: PORTC */
+#define BOARD_MANUAL_MODE_PIN 0U     /*!<@brief PORTC pin index: 0 */
+                                     /* @} */
 
 /*! @name PORTC9 (number 81), J1[9]
   @{ */
-#define BOARD_FRONT_RIGHT_ACT_GPIO GPIOC /*!<@brief GPIO device name: GPIOC */
-#define BOARD_FRONT_RIGHT_ACT_PORT PORTC /*!<@brief PORT device name: PORTC */
-#define BOARD_FRONT_RIGHT_ACT_PIN 9U     /*!<@brief PORTC pin index: 9 */
-                                         /* @} */
+#define BOARD_AUTO_MODE_GPIO GPIOC /*!<@brief GPIO device name: GPIOC */
+#define BOARD_AUTO_MODE_PORT PORTC /*!<@brief PORT device name: PORTC */
+#define BOARD_AUTO_MODE_PIN 9U     /*!<@brief PORTC pin index: 9 */
+                                   /* @} */
 
 /*! @name PORTC8 (number 80), J1[7]
   @{ */
-#define BOARD_MANUAL_MODE_GPIO GPIOC /*!<@brief GPIO device name: GPIOC */
-#define BOARD_MANUAL_MODE_PORT PORTC /*!<@brief PORT device name: PORTC */
-#define BOARD_MANUAL_MODE_PIN 8U     /*!<@brief PORTC pin index: 8 */
-                                     /* @} */
+#define BOARD_FRONT_LEFT_ACT_GPIO GPIOC /*!<@brief GPIO device name: GPIOC */
+#define BOARD_FRONT_LEFT_ACT_PORT PORTC /*!<@brief PORT device name: PORTC */
+#define BOARD_FRONT_LEFT_ACT_PIN 8U     /*!<@brief PORTC pin index: 8 */
+                                        /* @} */
 
 /*! @name PORTC1 (number 71), J1[5]
   @{ */
-#define BOARD_AUTO_MODE_GPIO GPIOC /*!<@brief GPIO device name: GPIOC */
-#define BOARD_AUTO_MODE_PORT PORTC /*!<@brief PORT device name: PORTC */
-#define BOARD_AUTO_MODE_PIN 1U     /*!<@brief PORTC pin index: 1 */
-                                   /* @} */
+#define BOARD_FRONT_RIGHT_ACT_GPIO GPIOC /*!<@brief GPIO device name: GPIOC */
+#define BOARD_FRONT_RIGHT_ACT_PORT PORTC /*!<@brief PORT device name: PORTC */
+#define BOARD_FRONT_RIGHT_ACT_PIN 1U     /*!<@brief PORTC pin index: 1 */
+                                         /* @} */
 
 /*! @name PORTC10 (number 82), J4[12]
   @{ */
