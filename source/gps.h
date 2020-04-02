@@ -11,7 +11,17 @@
 #include "fsl_ftm.h"
 #include "IrqHandler.h"
 
-bool InitializeGPS(void);
+#include "Adafruit_PMTK.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+bool InitializeGPS(void);
+void getGpsVelocity(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //__GPS_H__

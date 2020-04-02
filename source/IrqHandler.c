@@ -14,7 +14,8 @@ uint32_t capturedCounterFrontRightHall = 0;
 uint32_t capturedCounterRearHall = 0;
 
 volatile uint16_t rxIndex = 0;
-uint8_t rxBuffer[GPS_BUFFER_SIZE];
+uint8_t gpsRxBuffer[GPS_BUFFER_SIZE];
+uint8_t buffer[GPS_BUFFER_SIZE];
 
 uint64_t g_systickCounter = 0;
 
@@ -22,6 +23,8 @@ bool g_bFrontLeftActuate = false;
 bool g_bFrontRightActuate = false;
 bool g_bManualMode = false;
 bool g_bAutoMode = false;
+
+bool bCheckGps = false;
 
 #ifdef __cplusplus
 extern "C" {
@@ -106,19 +109,25 @@ void UART3_SERIAL_RX_TX_IRQHANDLER(void)
 	uint8_t data;
 
 	/* If new data arrived. */
-	if ((kUART_RxDataRegFullFlag | kUART_RxOverrunFlag) & UART_GetStatusFlags(UART_3_PERIPHERAL))
+	if ((kUART_RxDataRegFullFlag | kUART_RxOverrunFlag) & UART_GetStatusFlags(UART3_PERIPHERAL))
 	{
-		data = UART_ReadByte(UART_3_PERIPHERAL);
-		rxBuffer[rxIndex] = data;
+		data = UART_ReadByte(UART3_PERIPHERAL);
 
 		if(data == '$')
 		{
+			if(buffer[3] == 'R'){
+				for(int i = 0; i < GPS_BUFFER_SIZE; i++){
+					gpsRxBuffer[i] = (i < rxIndex) ? buffer[i] : 32;
+				}
+				bCheckGps = true;
+			}
 			rxIndex = 0;
 		}
 		else
 		{
 			rxIndex++;
 		}
+		buffer[rxIndex] = data;
 	}
 }
 

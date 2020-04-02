@@ -117,8 +117,8 @@ int main(void) {
     if(!bInitAccel){
     	while(1){}
     }
+    InitializeGPS();
     InitializeMotors();
-
 
     /*Main Processing Loop*/
     uint32_t potValue = 0;
@@ -152,6 +152,7 @@ int main(void) {
     		}
 
         	GPIO_PinWrite(BOARD_LED_ERROR_GPIO, BOARD_LED_ERROR_PIN, bError ? 1 : 0);
+
     		b1kHzFlag = false;
     	}
     	if(b5kHzFlag){
@@ -177,6 +178,11 @@ int main(void) {
 
     	if(b10kHzFlag){
         	potValue = (90*potValue + 10*getPotValue())/100;
+
+        	if(bCheckGps){
+        		getGpsVelocity();
+        		bCheckGps = false;
+        	}
     		b10kHzFlag = false;
     	}
     }

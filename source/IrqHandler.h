@@ -35,7 +35,7 @@ extern "C" {
 }
 #endif
 
-#define GPS_BUFFER_SIZE 8
+#define GPS_BUFFER_SIZE 72
 
 void PORTB_IRQHandler(void);
 void PORTC_IRQHandler(void);
@@ -50,7 +50,7 @@ extern uint32_t capturedCounterFrontLeftHall;
 extern uint32_t capturedCounterFrontRightHall;
 extern uint32_t capturedCounterRearHall;
 
-extern uint8_t rxBuffer[GPS_BUFFER_SIZE];
+extern uint8_t gpsRxBuffer[GPS_BUFFER_SIZE];
 
 extern uint64_t g_systickCounter;
 
@@ -59,5 +59,6 @@ extern bool g_bFrontRightActuate;
 extern bool g_bManualMode;
 extern bool g_bAutoMode;
 
+extern bool bCheckGps;
 
 #endif //__IRQ_HANDLER_H__
