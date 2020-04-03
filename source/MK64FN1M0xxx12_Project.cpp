@@ -47,6 +47,20 @@
 #include "gps.h"
 #include "IrqHandler.h"
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+// C header here
+//Simulink includes
+#include "rtmodel.h"
+
+#ifdef __cplusplus
+}
+#endif
+
+
 
 void InitializeTimers(void)
 {
@@ -120,6 +134,9 @@ int main(void) {
     InitializeGPS();
     InitializeMotors();
 
+    //Initialize Simulink code
+    AWDControl_initialize();
+
     /*Main Processing Loop*/
     uint32_t potValue = 0;
     bool leftManualOverride = false;
@@ -173,6 +190,15 @@ int main(void) {
 
     		//goToDegreePID(eLeftMotor, potValue*312/3290);
     		//goToDegreePID(eRightMotor, potValue*312/3290);
+
+
+    		//NOTE: Update the variable rtU before calling the step function
+
+    		//Call 1ms tasks for Simulink code
+    		AWDControl_step();
+
+    		//NOTE: Update all local variables by copying the output values from rtY after calling the step function
+
     		b5kHzFlag = false;
     	}
 
