@@ -30,5 +30,5 @@ uint32_t getPotValue(void)
 
 uint32_t getPotAngle(void)
 {
-	return getPotValue();
+	return getPotValue()*312/3290;
 }

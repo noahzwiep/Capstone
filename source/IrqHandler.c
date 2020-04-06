@@ -14,7 +14,7 @@ uint32_t capturedCounterFrontRightHall = 0;
 uint32_t capturedCounterRearHall = 0;
 
 volatile uint16_t rxIndex = 0;
-uint8_t gpsRxBuffer[GPS_BUFFER_SIZE];
+char gpsRxBuffer[GPS_BUFFER_SIZE];
 uint8_t buffer[GPS_BUFFER_SIZE];
 
 uint64_t g_systickCounter = 0;

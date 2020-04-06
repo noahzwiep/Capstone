@@ -60,8 +60,6 @@ extern "C"
 }
 #endif
 
-
-
 void InitializeTimers(void)
 {
     ftm_config_t ftmInfo;
@@ -94,8 +92,9 @@ void InitializeTimers(void)
 
     /*Setup 1kHz Interrupt*/
     SysTick_Config(SystemCoreClock / 1000U);
-
 }
+
+
 
 
 void delay(void)
@@ -138,13 +137,17 @@ int main(void) {
     AWDControl_initialize();
 
     /*Main Processing Loop*/
-    uint32_t potValue = 0;
+    uint32_t potAngle = 0;
+    double frontLeftMotorActuatePercent = 0;
+    double frontRightMotorActuatePercent = 0;
     bool leftManualOverride = false;
     bool rightManualOverride = false;
     bool manualMode = false;
     bool autoMode = false;
-    bool bHomeRequired = false;
     bool bError = false;
+    float ax, ay, az;
+    float yaw,pitch,roll;
+
     while(1) {
     	if(b1kHzFlag){
     		bError = false;
@@ -152,6 +155,7 @@ int main(void) {
     		/*Update Button Debouncing with rate of 1ms*/
     		UpdateLimitSwitches(1);
     		UpdateManualControls(1);
+    		//UpdateAxleRpm(1);
 
     		if(isMotorHome(eLeftMotor)){
     			pulseCount[eLeftMotor] = 0;
@@ -168,47 +172,47 @@ int main(void) {
     			}
     		}
 
+    		rtU.m_steeringAngle = potAngle;
+    		rtU.m_rearAxleRPM = axleRpm[eRearAxle];
+    		rtU.m_frontLeftRPM = axleRpm[eFrontLeftAxle];
+    		rtU.m_frontRightRPM = axleRpm[eFrontRightAxle];
+    		rtU.m_yawRate = yaw;
+    		rtU.m_accelerationLongitudinal = ax;
+    		rtU.m_accelerationLateral = ay;
+    		rtU.m_GPSvehicleSpeed = getGpsVelocity();
+    		rtU.m_activateLeft = leftManualOverride;
+    		rtU.m_activateRight = rightManualOverride;
+    		rtU.m_controlMode = (uint8_t)(manualMode | (uint8_t)(autoMode<<1));
+    		rtU.m_frontLeftSwitch = isMotorHome(eLeftMotor);
+    		rtU.m_frontRightSwitch = isMotorHome(eRightMotor);
+
+
+    		//Call 1ms tasks for Simulink code
+    		AWDControl_step();
+
+    		//NOTE: Update all local variables by copying the output values from rtY after calling the step function
+    		frontLeftMotorActuatePercent = rtY.c_frontLeftMotorActuate;
+    		frontRightMotorActuatePercent = rtY.c_frontRightMotorActuate;
+
+			bError = bError & (rtY.c_frontLeftMalfunction | rtY.c_frontRightMalfunction);
+
         	GPIO_PinWrite(BOARD_LED_ERROR_GPIO, BOARD_LED_ERROR_PIN, bError ? 1 : 0);
 
     		b1kHzFlag = false;
     	}
     	if(b5kHzFlag){
     		getManualControlValues(&leftManualOverride, &rightManualOverride, &manualMode, &autoMode);
+    		GetMotionValues(&ax, &ay, &az, &yaw, &pitch, &roll);
 
-    		if(manualMode || autoMode){
-    			goToDegreePID(eLeftMotor, leftManualOverride ? 150 : 0);
-    			goToDegreePID(eRightMotor, rightManualOverride ? 150 : 0);
-
-    			bHomeRequired = true;
-    		}
-    		else{
-    			if(bHomeRequired){
-    				HomeMotors(false);
-    				bHomeRequired = false;
-    			}
-    		}
-
-    		//goToDegreePID(eLeftMotor, potValue*312/3290);
-    		//goToDegreePID(eRightMotor, potValue*312/3290);
-
-
-    		//NOTE: Update the variable rtU before calling the step function
-
-    		//Call 1ms tasks for Simulink code
-    		AWDControl_step();
-
-    		//NOTE: Update all local variables by copying the output values from rtY after calling the step function
+    		goToDegreePID(eLeftMotor, frontLeftMotorActuatePercent*MAX_MOTOR_DEGREE);
+    		goToDegreePID(eRightMotor, frontRightMotorActuatePercent*MAX_MOTOR_DEGREE);
 
     		b5kHzFlag = false;
     	}
 
     	if(b10kHzFlag){
-        	potValue = (90*potValue + 10*getPotValue())/100;
+        	potAngle = (90*potAngle + 10*getPotAngle())/100;
 
-        	if(bCheckGps){
-        		//getGpsVelocity();
-        		bCheckGps = false;
-        	}
     		b10kHzFlag = false;
     	}
     }

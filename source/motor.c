@@ -361,6 +361,14 @@ void goToDegree(motor_t motor, int32_t degree)
 
 void goToDegreePID(motor_t motor, int32_t degree)
 {
+	/*Do some bound checks*/
+	if(degree > MAX_MOTOR_DEGREE){
+		degree = MAX_MOTOR_DEGREE;
+	}
+	if(degree < 0 ){
+		degree = 0;
+	}
+
 	int64_t finalPulseCount =  (degree * 396)/360;
 	int64_t error = finalPulseCount - pulseCount[motor];
 

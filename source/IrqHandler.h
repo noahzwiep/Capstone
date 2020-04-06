@@ -50,7 +50,7 @@ extern uint32_t capturedCounterFrontLeftHall;
 extern uint32_t capturedCounterFrontRightHall;
 extern uint32_t capturedCounterRearHall;
 
-extern uint8_t gpsRxBuffer[GPS_BUFFER_SIZE];
+extern char gpsRxBuffer[GPS_BUFFER_SIZE];
 
 extern uint64_t g_systickCounter;
 

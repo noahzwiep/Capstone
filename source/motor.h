@@ -45,13 +45,14 @@ typedef enum _limit_switches
 	eLIMIT_SWITCH_COUNT
 } limit_t;
 
+#define MAX_MOTOR_DEGREE 150
+
 /* Get source clock for TPM driver */
 #define BOARD_TIMER_SOURCE_CLOCK CLOCK_GetFreq(kCLOCK_BusClk)
 
 /* Define IRQ Handlers Here*/
 #define BOARD_FTM_LEFT_IRQ_HANDLER 	FTM3_IRQHandler
 #define BOARD_FTM_RIGHT_IRQ_HANDLER FTM0_IRQHandler
-
 
 /*Global Variables*/
 extern motor_direction_t g_leftMotorDirection;

@@ -4,6 +4,8 @@ uint8_t UPDATE_10HZ[] = PMTK_SET_NMEA_UPDATE_10HZ;
 uint8_t UPDATE_ONLY_RMC[] = PMTK_SET_NMEA_OUTPUT_RMCONLY;
 uint8_t UPDATE_POSITION_10HZ[] = PMTK_API_SET_FIX_CTL_5HZ;
 
+float currentKnots = 0;
+
 bool InitializeGPS(void)
 {
 	//Pins and interrupts are initialized in BOARD_InitPeripherals(void)
@@ -20,11 +22,32 @@ bool InitializeGPS(void)
 	return true;
 }
 
-void getGpsVelocity(void)
+double getGpsVelocity(void)
 {
-	for(int i = 0; i<GPS_BUFFER_SIZE; i++)
+	int i = 0;
+
+	if(bCheckGps){
+		char *ptr = strtok(gpsRxBuffer, ",");
+		while(ptr != NULL)
+		{
+			if(i == 7){
+				currentKnots = atof(ptr);
+				break;
+			}
+			ptr = strtok(NULL, ",");
+			i++;
+		}
+		bCheckGps = false;
+	}
+
+	/*for(int i = 0; i<GPS_BUFFER_SIZE; i++)
 	{
 		printf("%c", gpsRxBuffer[i]);
 	}
 	printf("\n");
+
+	printf("%f\n", knots);
+	*/
+	//Knots to m/s
+	return currentKnots*0.514444;
 }

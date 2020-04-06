@@ -18,7 +18,7 @@ extern "C" {
 #endif
 
 bool InitializeGPS(void);
-void getGpsVelocity(void);
+double getGpsVelocity(void);
 
 #ifdef __cplusplus
 }
