@@ -131,8 +131,8 @@ void InitializeMotors(void)
     InitializeMotorGPIO();
     InitializeLimitSwitchGPIO();
 
-    UpdateMotorDirection(eLeftMotor, eDirectionForward);
-    UpdateMotorDirection(eRightMotor, eDirectionForward);
+    UpdateMotorDirection(eLeftMotor, eDirectionReverse);
+    UpdateMotorDirection(eRightMotor, eDirectionReverse);
 	GPIO_PinWrite(BOARD_MOTOR_EN_GPIO, BOARD_MOTOR_EN_PIN, 1);
 
 	HomeMotors(true);

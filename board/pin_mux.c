@@ -163,9 +163,9 @@ BOARD_InitPins:
   - {pin_num: '90', peripheral: UART3, signal: RX, pin_signal: PTC16/UART3_RX/ENET0_1588_TMR0/FB_CS5_b/FB_TSIZ1/FB_BE23_16_BLS15_8_b, identifier: GPS_RX}
   - {pin_num: '33', peripheral: GPIOE, signal: 'GPIO, 26', pin_signal: PTE26/ENET_1588_CLKIN/UART4_CTS_b/RTC_CLKOUT/USB_CLKIN, identifier: LED_ERROR, direction: OUTPUT}
   - {pin_num: '77', peripheral: GPIOC, signal: 'GPIO, 5', pin_signal: PTC5/LLWU_P9/SPI0_SCK/LPTMR0_ALT2/I2S0_RXD0/FB_AD10/CMP0_OUT/FTM0_CH2, direction: INPUT, gpio_interrupt: kPORT_InterruptFallingEdge,
-    pull_select: up, pull_enable: enable, passive_filter: enable}
+    slew_rate: fast, pull_select: up, pull_enable: disable, passive_filter: enable}
   - {pin_num: '79', peripheral: GPIOC, signal: 'GPIO, 7', pin_signal: CMP0_IN1/PTC7/SPI0_SIN/USB_SOF_OUT/I2S0_RX_FS/FB_AD8, identifier: FRONT_RIGHT_LIMIT, direction: INPUT,
-    gpio_interrupt: kPORT_InterruptFallingEdge, pull_select: up, pull_enable: enable, passive_filter: enable}
+    gpio_interrupt: kPORT_InterruptFallingEdge, slew_rate: fast, pull_select: up, pull_enable: disable, passive_filter: enable}
   - {pin_num: '70', peripheral: GPIOC, signal: 'GPIO, 0', pin_signal: ADC0_SE14/PTC0/SPI0_PCS4/PDB0_EXTRG/USB_SOF_OUT/FB_AD14/I2S0_TXD1, identifier: MANUAL_MODE,
     direction: INPUT, gpio_interrupt: kPORT_InterruptFallingEdge, pull_select: up, pull_enable: enable, passive_filter: enable}
   - {pin_num: '81', peripheral: GPIOC, signal: 'GPIO, 9', pin_signal: ADC1_SE5b/CMP0_IN3/PTC9/FTM3_CH5/I2S0_RX_BCLK/FB_AD6/FTM2_FLT0, identifier: AUTO_MODE, direction: INPUT,
@@ -493,18 +493,26 @@ void BOARD_InitPins(void)
     /* Interrupt configuration on PORTC5 (pin 77): Interrupt on falling edge */
     PORT_SetPinInterruptConfig(BOARD_FRONT_LEFT_LIMIT_PORT, BOARD_FRONT_LEFT_LIMIT_PIN, kPORT_InterruptFallingEdge);
 
-    PORTC->PCR[5] = ((PORTC->PCR[5] &
-                      /* Mask bits to zero which are setting */
-                      (~(PORT_PCR_PS_MASK | PORT_PCR_PE_MASK | PORT_PCR_PFE_MASK | PORT_PCR_ISF_MASK)))
+    PORTC->PCR[5] =
+        ((PORTC->PCR[5] &
+          /* Mask bits to zero which are setting */
+          (~(PORT_PCR_PS_MASK | PORT_PCR_PE_MASK | PORT_PCR_SRE_MASK | PORT_PCR_PFE_MASK | PORT_PCR_ISF_MASK)))
 
-                     /* Pull Select: Internal pullup resistor is enabled on the corresponding pin, if the
-                      * corresponding PE field is set. */
-                     | (uint32_t)(kPORT_PullUp)
+         /* Pull Select: Internal pullup resistor is enabled on the corresponding pin, if the corresponding PE
+          * field is set. */
+         | PORT_PCR_PS(kPORT_PullUp)
 
-                     /* Passive Filter Enable: Passive input filter is enabled on the corresponding pin, if the
-                      * pin is configured as a digital input.
-                      * Refer to the device data sheet for filter characteristics. */
-                     | PORT_PCR_PFE(kPORT_PassiveFilterEnable));
+         /* Pull Enable: Internal pullup or pulldown resistor is not enabled on the corresponding pin. */
+         | PORT_PCR_PE(kPORT_PullDisable)
+
+         /* Slew Rate Enable: Fast slew rate is configured on the corresponding pin, if the pin is configured as
+          * a digital output. */
+         | PORT_PCR_SRE(kPORT_FastSlewRate)
+
+         /* Passive Filter Enable: Passive input filter is enabled on the corresponding pin, if the pin is
+          * configured as a digital input.
+          * Refer to the device data sheet for filter characteristics. */
+         | PORT_PCR_PFE(kPORT_PassiveFilterEnable));
 
     /* PORTC7 (pin 79) is configured as PTC7 */
     PORT_SetPinMux(BOARD_FRONT_RIGHT_LIMIT_PORT, BOARD_FRONT_RIGHT_LIMIT_PIN, kPORT_MuxAsGpio);
@@ -512,18 +520,26 @@ void BOARD_InitPins(void)
     /* Interrupt configuration on PORTC7 (pin 79): Interrupt on falling edge */
     PORT_SetPinInterruptConfig(BOARD_FRONT_RIGHT_LIMIT_PORT, BOARD_FRONT_RIGHT_LIMIT_PIN, kPORT_InterruptFallingEdge);
 
-    PORTC->PCR[7] = ((PORTC->PCR[7] &
-                      /* Mask bits to zero which are setting */
-                      (~(PORT_PCR_PS_MASK | PORT_PCR_PE_MASK | PORT_PCR_PFE_MASK | PORT_PCR_ISF_MASK)))
+    PORTC->PCR[7] =
+        ((PORTC->PCR[7] &
+          /* Mask bits to zero which are setting */
+          (~(PORT_PCR_PS_MASK | PORT_PCR_PE_MASK | PORT_PCR_SRE_MASK | PORT_PCR_PFE_MASK | PORT_PCR_ISF_MASK)))
 
-                     /* Pull Select: Internal pullup resistor is enabled on the corresponding pin, if the
-                      * corresponding PE field is set. */
-                     | (uint32_t)(kPORT_PullUp)
+         /* Pull Select: Internal pullup resistor is enabled on the corresponding pin, if the corresponding PE
+          * field is set. */
+         | PORT_PCR_PS(kPORT_PullUp)
 
-                     /* Passive Filter Enable: Passive input filter is enabled on the corresponding pin, if the
-                      * pin is configured as a digital input.
-                      * Refer to the device data sheet for filter characteristics. */
-                     | PORT_PCR_PFE(kPORT_PassiveFilterEnable));
+         /* Pull Enable: Internal pullup or pulldown resistor is not enabled on the corresponding pin. */
+         | PORT_PCR_PE(kPORT_PullDisable)
+
+         /* Slew Rate Enable: Fast slew rate is configured on the corresponding pin, if the pin is configured as
+          * a digital output. */
+         | PORT_PCR_SRE(kPORT_FastSlewRate)
+
+         /* Passive Filter Enable: Passive input filter is enabled on the corresponding pin, if the pin is
+          * configured as a digital input.
+          * Refer to the device data sheet for filter characteristics. */
+         | PORT_PCR_PFE(kPORT_PassiveFilterEnable));
 
     /* PORTC8 (pin 80) is configured as PTC8 */
     PORT_SetPinMux(BOARD_FRONT_LEFT_ACT_PORT, BOARD_FRONT_LEFT_ACT_PIN, kPORT_MuxAsGpio);

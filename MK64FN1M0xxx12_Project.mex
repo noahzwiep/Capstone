@@ -289,8 +289,9 @@
                      <pin_features>
                         <pin_feature name="direction" value="INPUT"/>
                         <pin_feature name="gpio_interrupt" value="kPORT_InterruptFallingEdge"/>
+                        <pin_feature name="slew_rate" value="fast"/>
                         <pin_feature name="pull_select" value="up"/>
-                        <pin_feature name="pull_enable" value="enable"/>
+                        <pin_feature name="pull_enable" value="disable"/>
                         <pin_feature name="passive_filter" value="enable"/>
                      </pin_features>
                   </pin>
@@ -299,8 +300,9 @@
                         <pin_feature name="identifier" value="FRONT_RIGHT_LIMIT"/>
                         <pin_feature name="direction" value="INPUT"/>
                         <pin_feature name="gpio_interrupt" value="kPORT_InterruptFallingEdge"/>
+                        <pin_feature name="slew_rate" value="fast"/>
                         <pin_feature name="pull_select" value="up"/>
-                        <pin_feature name="pull_enable" value="enable"/>
+                        <pin_feature name="pull_enable" value="disable"/>
                         <pin_feature name="passive_filter" value="enable"/>
                      </pin_features>
                   </pin>

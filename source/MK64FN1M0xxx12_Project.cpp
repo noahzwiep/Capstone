@@ -180,7 +180,7 @@ int main(void) {
         	potValue = (90*potValue + 10*getPotValue())/100;
 
         	if(bCheckGps){
-        		getGpsVelocity();
+        		//getGpsVelocity();
         		bCheckGps = false;
         	}
     		b10kHzFlag = false;
