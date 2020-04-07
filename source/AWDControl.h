@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'AWDControl'.
  *
- * Model version                  : 1.144
+ * Model version                  : 1.149
  * Simulink Coder version         : 9.0 (R2018b) 24-May-2018
- * C/C++ source code generated on : Sun Mar  8 12:52:38 2020
+ * C/C++ source code generated on : Tue Apr  7 15:43:56 2020
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: ARM Compatible->ARM Cortex
@@ -22,8 +22,8 @@
 #ifndef RTW_HEADER_AWDControl_h_
 #define RTW_HEADER_AWDControl_h_
 #include "rtwtypes.h"
-//#include <math.h>
-//#include <stddef.h>
+#include <math.h>
+#include <stddef.h>
 #ifndef AWDControl_COMMON_INCLUDES_
 # define AWDControl_COMMON_INCLUDES_
 #include "rtwtypes.h"
@@ -143,88 +143,88 @@ typedef struct mdyQhV8pWswhMUNQqaQbWMYF dsp_LowpassFilter;
 
 #endif                                 /*typedef_dsp_LowpassFilter*/
 
-/* Block signals and states (default storage) for system '<S3>/Lowpass Filter1' */
+/* Block signals and states (default storage) for system '<S2>/Lowpass Filter1' */
 typedef struct {
-  dspcodegen_FIRFilter gobj_0;         /* '<S3>/Lowpass Filter1' */
-  dspcodegen_FIRFilter gobj_1;         /* '<S3>/Lowpass Filter1' */
-  dsp_LowpassFilter obj;               /* '<S3>/Lowpass Filter1' */
-  real_T LowpassFilter1_o;             /* '<S3>/Lowpass Filter1' */
-  boolean_T objisempty;                /* '<S3>/Lowpass Filter1' */
-  boolean_T isInitialized;             /* '<S3>/Lowpass Filter1' */
+  dspcodegen_FIRFilter gobj_0;         /* '<S2>/Lowpass Filter1' */
+  dspcodegen_FIRFilter gobj_1;         /* '<S2>/Lowpass Filter1' */
+  dsp_LowpassFilter obj;               /* '<S2>/Lowpass Filter1' */
+  real_T LowpassFilter1_o;             /* '<S2>/Lowpass Filter1' */
+  boolean_T objisempty;                /* '<S2>/Lowpass Filter1' */
+  boolean_T isInitialized;             /* '<S2>/Lowpass Filter1' */
 } DW_LowpassFilter1;
 
 /* Block signals and states (default storage) for system '<Root>' */
 typedef struct {
-  DW_LowpassFilter1 LowpassFilter;     /* '<S3>/Lowpass Filter1' */
-  DW_LowpassFilter1 LowpassFilter1_p;  /* '<S3>/Lowpass Filter1' */
-  VehicleState BusConversion_InsertedFor_ModeS;
-  real_T rearAxleRPMOut;               /* '<S4>/Chart' */
-  real_T frontLeftRPMOut;              /* '<S4>/Chart' */
-  real_T frontRightRPMOut;             /* '<S4>/Chart' */
-  real_T GPSvehicleSpeedOut;           /* '<S4>/Chart' */
-  real_T frontLeftMotorActuate;        /* '<Root>/ModeSelection' */
-  real_T frontRightMotorActuate;       /* '<Root>/ModeSelection' */
-  real_T rearSlipRatio;                /* '<Root>/ModeSelection' */
-  real_T accelerationLong;             /* '<Root>/ModeSelection' */
-  real_T accelerationLat;              /* '<Root>/ModeSelection' */
-  real_T uDLookupTable1;               /* '<S6>/1-D Lookup Table1' */
-  real_T Subtract1;                    /* '<S6>/Subtract1' */
-  real_T Gain1;                        /* '<S7>/Gain1' */
-  real_T OutportBufferForc_frontRightMot;/* '<S7>/Gain1' */
-  int32_T sfEvent;                     /* '<S4>/Chart' */
-  int32_T sfEvent_n;                   /* '<Root>/ModeSelection' */
-  int32_T chartAbsoluteTimeCounter;    /* '<Root>/ModeSelection' */
-  int32_T durationLastReferenceTick_1; /* '<Root>/ModeSelection' */
-  int32_T durationLastReferenceTick_2; /* '<Root>/ModeSelection' */
+  DW_LowpassFilter1 LowpassFilter;     /* '<S2>/Lowpass Filter1' */
+  DW_LowpassFilter1 LowpassFilter1_p;  /* '<S2>/Lowpass Filter1' */
+  VehicleState BusConversion_InsertedFor_Vehic;
+  real_T frontLeftMotorActuate;        /* '<Root>/Vehicle Dynamic Controller' */
+  real_T frontRightMotorActuate;       /* '<Root>/Vehicle Dynamic Controller' */
+  real_T rearSlipRatio;                /* '<Root>/Vehicle Dynamic Controller' */
+  real_T accelerationLong;             /* '<Root>/Vehicle Dynamic Controller' */
+  real_T accelerationLat;              /* '<Root>/Vehicle Dynamic Controller' */
+  real_T uDLookupTable1;               /* '<S7>/1-D Lookup Table1' */
+  real_T Subtract1;                    /* '<S7>/Subtract1' */
+  real_T Gain1;                        /* '<S8>/Gain1' */
+  real_T OutportBufferForc_frontRightMot;/* '<S8>/Gain1' */
+  real_T rearAxleRPMOut;               /* '<S3>/Chart' */
+  real_T frontLeftRPMOut;              /* '<S3>/Chart' */
+  real_T frontRightRPMOut;             /* '<S3>/Chart' */
+  real_T GPSvehicleSpeedOut;           /* '<S3>/Chart' */
+  int32_T sfEvent;                     /* '<Root>/Vehicle Dynamic Controller' */
+  int32_T chartAbsoluteTimeCounter;    /* '<Root>/Vehicle Dynamic Controller' */
+  int32_T durationLastReferenceTick_1; /* '<Root>/Vehicle Dynamic Controller' */
+  int32_T durationLastReferenceTick_2; /* '<Root>/Vehicle Dynamic Controller' */
+  int32_T sfEvent_e;                   /* '<S3>/Chart' */
   CONTROL_MODE DataTypeConversion;     /* '<S1>/Data Type Conversion' */
-  uint8_T is_active_c1_AWDControl;     /* '<S4>/Chart' */
-  uint8_T is_STEERING_CHECK;           /* '<S4>/Chart' */
-  uint8_T is_active_STEERING_CHECK;    /* '<S4>/Chart' */
-  uint8_T is_REAR_AXEL;                /* '<S4>/Chart' */
-  uint8_T is_active_REAR_AXEL;         /* '<S4>/Chart' */
-  uint8_T is_FRONT_LEFT_WHEEL;         /* '<S4>/Chart' */
-  uint8_T is_active_FRONT_LEFT_WHEEL;  /* '<S4>/Chart' */
-  uint8_T is_FRONT_RIGHT_WHEEL;        /* '<S4>/Chart' */
-  uint8_T is_active_FRONT_RIGHT_WHEEL; /* '<S4>/Chart' */
-  uint8_T is_YAW_RATE_CHECK;           /* '<S4>/Chart' */
-  uint8_T is_active_YAW_RATE_CHECK;    /* '<S4>/Chart' */
-  uint8_T is_ACCELEROMETER_LONG_CHECK; /* '<S4>/Chart' */
-  uint8_T is_active_ACCELEROMETER_LONG_CH;/* '<S4>/Chart' */
-  uint8_T is_ACCELEROMETER_LATERAL_CHECK;/* '<S4>/Chart' */
-  uint8_T is_active_ACCELEROMETER_LATERAL;/* '<S4>/Chart' */
-  uint8_T is_GPS_SPEED_CHECK;          /* '<S4>/Chart' */
-  uint8_T is_active_GPS_SPEED_CHECK;   /* '<S4>/Chart' */
-  uint8_T is_ERROR_STATE;              /* '<S4>/Chart' */
-  uint8_T is_active_ERROR_STATE;       /* '<S4>/Chart' */
-  uint8_T is_active_c3_AWDControl;     /* '<Root>/ModeSelection' */
-  uint8_T is_CHECK_FOR_CONTROL_ERRORS; /* '<Root>/ModeSelection' */
-  uint8_T is_active_CHECK_FOR_CONTROL_ERR;/* '<Root>/ModeSelection' */
-  uint8_T is_AWD_CONTROL;              /* '<Root>/ModeSelection' */
-  uint8_T is_active_AWD_CONTROL;       /* '<Root>/ModeSelection' */
-  uint8_T is_NORMAL_OPERATION;         /* '<Root>/ModeSelection' */
-  uint8_T is_AUTO_MODE;                /* '<Root>/ModeSelection' */
-  uint8_T is_DYNAMIC_CONTROLLER;       /* '<Root>/ModeSelection' */
-  boolean_T sensorError;               /* '<S4>/Chart' */
-  boolean_T condWasTrueAtLastTimeStep_1;/* '<Root>/ModeSelection' */
-  boolean_T condWasTrueAtLastTimeStep_2;/* '<Root>/ModeSelection' */
+  uint8_T is_active_c3_AWDControl;     /* '<Root>/Vehicle Dynamic Controller' */
+  uint8_T is_CHECK_FOR_CONTROL_ERRORS; /* '<Root>/Vehicle Dynamic Controller' */
+  uint8_T is_active_CHECK_FOR_CONTROL_ERR;/* '<Root>/Vehicle Dynamic Controller' */
+  uint8_T is_AWD_CONTROL;              /* '<Root>/Vehicle Dynamic Controller' */
+  uint8_T is_active_AWD_CONTROL;       /* '<Root>/Vehicle Dynamic Controller' */
+  uint8_T is_NORMAL_OPERATION;         /* '<Root>/Vehicle Dynamic Controller' */
+  uint8_T is_AUTO_MODE;                /* '<Root>/Vehicle Dynamic Controller' */
+  uint8_T is_DYNAMIC_CONTROLLER;       /* '<Root>/Vehicle Dynamic Controller' */
+  uint8_T is_active_c1_AWDControl;     /* '<S3>/Chart' */
+  uint8_T is_STEERING_CHECK;           /* '<S3>/Chart' */
+  uint8_T is_active_STEERING_CHECK;    /* '<S3>/Chart' */
+  uint8_T is_REAR_AXEL;                /* '<S3>/Chart' */
+  uint8_T is_active_REAR_AXEL;         /* '<S3>/Chart' */
+  uint8_T is_FRONT_LEFT_WHEEL;         /* '<S3>/Chart' */
+  uint8_T is_active_FRONT_LEFT_WHEEL;  /* '<S3>/Chart' */
+  uint8_T is_FRONT_RIGHT_WHEEL;        /* '<S3>/Chart' */
+  uint8_T is_active_FRONT_RIGHT_WHEEL; /* '<S3>/Chart' */
+  uint8_T is_YAW_RATE_CHECK;           /* '<S3>/Chart' */
+  uint8_T is_active_YAW_RATE_CHECK;    /* '<S3>/Chart' */
+  uint8_T is_ACCELEROMETER_LONG_CHECK; /* '<S3>/Chart' */
+  uint8_T is_active_ACCELEROMETER_LONG_CH;/* '<S3>/Chart' */
+  uint8_T is_ACCELEROMETER_LATERAL_CHECK;/* '<S3>/Chart' */
+  uint8_T is_active_ACCELEROMETER_LATERAL;/* '<S3>/Chart' */
+  uint8_T is_GPS_SPEED_CHECK;          /* '<S3>/Chart' */
+  uint8_T is_active_GPS_SPEED_CHECK;   /* '<S3>/Chart' */
+  uint8_T is_ERROR_STATE;              /* '<S3>/Chart' */
+  uint8_T is_active_ERROR_STATE;       /* '<S3>/Chart' */
+  boolean_T sensorError;               /* '<S3>/Chart' */
+  boolean_T condWasTrueAtLastTimeStep_1;/* '<Root>/Vehicle Dynamic Controller' */
+  boolean_T condWasTrueAtLastTimeStep_2;/* '<Root>/Vehicle Dynamic Controller' */
 } DW;
 
 /* Constant parameters (default storage) */
 typedef struct {
   /* Expression: tanh([-5:5]) + 1
-   * Referenced by: '<S6>/1-D Lookup Table'
+   * Referenced by: '<S7>/1-D Lookup Table'
    */
   real_T uDLookupTable_tableData[11];
 
   /* Pooled Parameter (Expression: [0:10])
    * Referenced by:
-   *   '<S6>/1-D Lookup Table'
-   *   '<S6>/1-D Lookup Table1'
+   *   '<S7>/1-D Lookup Table'
+   *   '<S7>/1-D Lookup Table1'
    */
-  real_T pooled6[11];
+  real_T pooled7[11];
 
   /* Expression: -1*tanh([-5:5])
-   * Referenced by: '<S6>/1-D Lookup Table1'
+   * Referenced by: '<S7>/1-D Lookup Table1'
    */
   real_T uDLookupTable1_tableData[11];
 } ConstP;
@@ -281,12 +281,8 @@ extern RT_MODEL *const rtM;
 /*-
  * These blocks were eliminated from the model due to optimizations:
  *
- * Block '<S6>/Front roll stiffness' : Eliminated nontunable gain of 1
- * Block '<S6>/Laterall_Modifier' : Eliminated nontunable gain of 1
- * Block '<S6>/Longitudinal_Modifier' : Eliminated nontunable gain of 1
- * Block '<S9>/Gain' : Eliminated nontunable gain of 1
- * Block '<S10>/Gain' : Eliminated nontunable gain of 1
- * Block '<S11>/Gain' : Eliminated nontunable gain of 1
+ * Block '<S7>/Laterall_Modifier' : Eliminated nontunable gain of 1
+ * Block '<S7>/Longitudinal_Modifier' : Eliminated nontunable gain of 1
  */
 
 /*-
@@ -305,13 +301,13 @@ extern RT_MODEL *const rtM;
  *
  * '<Root>' : 'AWDControl'
  * '<S1>'   : 'AWDControl/Input Filtering'
- * '<S2>'   : 'AWDControl/ModeSelection'
- * '<S3>'   : 'AWDControl/Output Filtering'
- * '<S4>'   : 'AWDControl/Sensor Range Check'
+ * '<S2>'   : 'AWDControl/Output Filtering'
+ * '<S3>'   : 'AWDControl/Sensor Range Check'
+ * '<S4>'   : 'AWDControl/Vehicle Dynamic Controller'
  * '<S5>'   : 'AWDControl/Vehicle State Estimator'
- * '<S6>'   : 'AWDControl/ModeSelection/AWD_CONTROL.NORMAL_OPERATION.AUTO_MODE.torqueVectoring'
- * '<S7>'   : 'AWDControl/ModeSelection/AWD_CONTROL.NORMAL_OPERATION.AUTO_MODE.tractionControl'
- * '<S8>'   : 'AWDControl/Sensor Range Check/Chart'
+ * '<S6>'   : 'AWDControl/Sensor Range Check/Chart'
+ * '<S7>'   : 'AWDControl/Vehicle Dynamic Controller/AWD_CONTROL.NORMAL_OPERATION.AUTO_MODE.torqueVectoring'
+ * '<S8>'   : 'AWDControl/Vehicle Dynamic Controller/AWD_CONTROL.NORMAL_OPERATION.AUTO_MODE.tractionControl'
  * '<S9>'   : 'AWDControl/Vehicle State Estimator/Front Left Wheel Slip Ratio Calculator'
  * '<S10>'  : 'AWDControl/Vehicle State Estimator/Front Right Wheel Slip Ratio Calculator'
  * '<S11>'  : 'AWDControl/Vehicle State Estimator/Rear Wheels Slip Ratio Calculator'
