@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'AWDControl'.
  *
- * Model version                  : 1.149
+ * Model version                  : 1.157
  * Simulink Coder version         : 9.0 (R2018b) 24-May-2018
- * C/C++ source code generated on : Tue Apr  7 15:43:56 2020
+ * C/C++ source code generated on : Wed Apr  8 20:52:49 2020
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: ARM Compatible->ARM Cortex
@@ -185,6 +185,7 @@ typedef struct {
   uint8_T is_NORMAL_OPERATION;         /* '<Root>/Vehicle Dynamic Controller' */
   uint8_T is_AUTO_MODE;                /* '<Root>/Vehicle Dynamic Controller' */
   uint8_T is_DYNAMIC_CONTROLLER;       /* '<Root>/Vehicle Dynamic Controller' */
+  uint8_T is_MANUAL_MODE;              /* '<Root>/Vehicle Dynamic Controller' */
   uint8_T is_active_c1_AWDControl;     /* '<S3>/Chart' */
   uint8_T is_STEERING_CHECK;           /* '<S3>/Chart' */
   uint8_T is_active_STEERING_CHECK;    /* '<S3>/Chart' */

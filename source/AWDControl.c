@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'AWDControl'.
  *
- * Model version                  : 1.149
+ * Model version                  : 1.157
  * Simulink Coder version         : 9.0 (R2018b) 24-May-2018
- * C/C++ source code generated on : Tue Apr  7 15:43:56 2020
+ * C/C++ source code generated on : Wed Apr  8 20:52:49 2020
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: ARM Compatible->ARM Cortex
@@ -37,9 +37,11 @@
 #define IN_DYNAMIC_CONTROLLER          ((uint8_T)1U)
 #define IN_ERROR                       ((uint8_T)1U)
 #define IN_ERRORS                      ((uint8_T)1U)
+#define IN_MANUAL_MODE                 ((uint8_T)2U)
+#define IN_MANUAL_OFF                  ((uint8_T)1U)
+#define IN_MANUAL_ON                   ((uint8_T)2U)
 #define IN_NORMAL_OPERATION            ((uint8_T)2U)
-#define IN_OFF_MODE                    ((uint8_T)2U)
-#define IN_ON_MODE                     ((uint8_T)3U)
+#define IN_OFF_MODE                    ((uint8_T)3U)
 #define IN_OVERRIDE_CONTROL            ((uint8_T)2U)
 #define IN_TRACTION_CONTROL            ((uint8_T)3U)
 #define event_motorFailed              (0)
@@ -78,6 +80,9 @@ static boolean_T isManualModeRequest(boolean_T frontLeftMotorOverride, boolean_T
   frontRightmotorOverride);
 static boolean_T isCarTurning(real_T steeringAngle);
 static boolean_T isVehicleSlipping(real_T rearSR);
+static void overrideMotorRequest(boolean_T motorOverride1, boolean_T
+  motorOverride2, real_T *motor1, real_T *motor2);
+static void OFF_MODE(void);
 static void NORMAL_OPERATION(void);
 static real_T look1_binlag(real_T u0, const real_T bp0[], const real_T table[],
   uint32_T maxIndex)
@@ -374,6 +379,65 @@ static boolean_T isVehicleSlipping(real_T rearSR)
 }
 
 /* Function for Chart: '<Root>/Vehicle Dynamic Controller' */
+static void overrideMotorRequest(boolean_T motorOverride1, boolean_T
+  motorOverride2, real_T *motor1, real_T *motor2)
+{
+  if (motorOverride1 && motorOverride2) {
+    *motor1 = 1.0;
+    *motor2 = 1.0;
+  } else if (motorOverride1 && (!motorOverride2)) {
+    *motor1 = 1.0;
+    *motor2 = 0.0;
+  } else if ((!motorOverride1) && motorOverride2) {
+    *motor1 = 0.0;
+    *motor2 = 1.0;
+  } else {
+    *motor1 = 0.0;
+    *motor2 = 0.0;
+  }
+}
+
+/* Function for Chart: '<Root>/Vehicle Dynamic Controller' */
+static void OFF_MODE(void)
+{
+  boolean_T hoisted_cond;
+  switch (rtDW.DataTypeConversion) {
+   case CONTROL_MODE_AUTO:
+    rtDW.is_NORMAL_OPERATION = IN_AUTO_MODE;
+    rtDW.is_AUTO_MODE = IN_DYNAMIC_CONTROLLER;
+    rtDW.is_DYNAMIC_CONTROLLER = IN_CHECK_STATE;
+    break;
+
+   case CONTROL_MODE_MANUAL:
+    rtDW.is_NORMAL_OPERATION = IN_MANUAL_MODE;
+    rtDW.is_MANUAL_MODE = IN_MANUAL_OFF;
+    break;
+
+   default:
+    rtDW.frontLeftMotorActuate = 0.0;
+
+    /* Inport: '<Root>/m_frontLeftSwitch' */
+    hoisted_cond = (rtU.m_frontLeftSwitch && (rtDW.frontLeftMotorActuate == 0.0));
+    if ((!hoisted_cond) || (!rtDW.condWasTrueAtLastTimeStep_1)) {
+      rtDW.durationLastReferenceTick_1 = rtDW.chartAbsoluteTimeCounter;
+    }
+
+    rtDW.condWasTrueAtLastTimeStep_1 = hoisted_cond;
+    rtDW.frontRightMotorActuate = 0.0;
+
+    /* Inport: '<Root>/m_frontRightSwitch' */
+    hoisted_cond = (rtU.m_frontRightSwitch && (rtDW.frontRightMotorActuate ==
+      0.0));
+    if ((!hoisted_cond) || (!rtDW.condWasTrueAtLastTimeStep_2)) {
+      rtDW.durationLastReferenceTick_2 = rtDW.chartAbsoluteTimeCounter;
+    }
+
+    rtDW.condWasTrueAtLastTimeStep_2 = hoisted_cond;
+    break;
+  }
+}
+
+/* Function for Chart: '<Root>/Vehicle Dynamic Controller' */
 static void NORMAL_OPERATION(void)
 {
   boolean_T hoisted_cond;
@@ -383,6 +447,7 @@ static void NORMAL_OPERATION(void)
       rtDW.is_AUTO_MODE = IN_NO_ACTIVE_CHILD;
       rtDW.is_NORMAL_OPERATION = IN_NO_ACTIVE_CHILD;
     } else {
+      rtDW.is_MANUAL_MODE = IN_NO_ACTIVE_CHILD;
       rtDW.is_NORMAL_OPERATION = IN_NO_ACTIVE_CHILD;
     }
 
@@ -425,7 +490,8 @@ static void NORMAL_OPERATION(void)
        case CONTROL_MODE_MANUAL:
         rtDW.is_DYNAMIC_CONTROLLER = IN_NO_ACTIVE_CHILD;
         rtDW.is_AUTO_MODE = IN_NO_ACTIVE_CHILD;
-        rtDW.is_NORMAL_OPERATION = IN_ON_MODE;
+        rtDW.is_NORMAL_OPERATION = IN_MANUAL_MODE;
+        rtDW.is_MANUAL_MODE = IN_MANUAL_OFF;
         break;
 
        default:
@@ -570,7 +636,9 @@ static void NORMAL_OPERATION(void)
             rtDW.is_AUTO_MODE = IN_DYNAMIC_CONTROLLER;
             rtDW.is_DYNAMIC_CONTROLLER = IN_CHECK_STATE;
           } else {
-            rtDW.frontLeftMotorActuate = 1.0;
+            overrideMotorRequest(rtU.m_activateLeft, rtU.m_activateRight,
+                                 &rtDW.frontLeftMotorActuate,
+                                 &rtDW.frontRightMotorActuate);
 
             /* Inport: '<Root>/m_frontLeftSwitch' */
             hoisted_cond = (rtU.m_frontLeftSwitch && (rtDW.frontLeftMotorActuate
@@ -580,7 +648,87 @@ static void NORMAL_OPERATION(void)
             }
 
             rtDW.condWasTrueAtLastTimeStep_1 = hoisted_cond;
-            rtDW.frontRightMotorActuate = 1.0;
+
+            /* Inport: '<Root>/m_frontRightSwitch' */
+            hoisted_cond = (rtU.m_frontRightSwitch &&
+                            (rtDW.frontRightMotorActuate == 0.0));
+            if ((!hoisted_cond) || (!rtDW.condWasTrueAtLastTimeStep_2)) {
+              rtDW.durationLastReferenceTick_2 = rtDW.chartAbsoluteTimeCounter;
+            }
+
+            rtDW.condWasTrueAtLastTimeStep_2 = hoisted_cond;
+          }
+          break;
+        }
+        break;
+      }
+      break;
+
+     case IN_MANUAL_MODE:
+      switch (rtDW.DataTypeConversion) {
+       case CONTROL_MODE_AUTO:
+        rtDW.is_MANUAL_MODE = IN_NO_ACTIVE_CHILD;
+        rtDW.is_NORMAL_OPERATION = IN_AUTO_MODE;
+        rtDW.is_AUTO_MODE = IN_DYNAMIC_CONTROLLER;
+        rtDW.is_DYNAMIC_CONTROLLER = IN_CHECK_STATE;
+        break;
+
+       case CONTROL_MODE_OFF:
+        rtDW.is_MANUAL_MODE = IN_NO_ACTIVE_CHILD;
+        rtDW.is_NORMAL_OPERATION = IN_OFF_MODE;
+        break;
+
+       default:
+        switch (rtDW.is_MANUAL_MODE) {
+         case IN_MANUAL_OFF:
+          /* Inport: '<Root>/m_activateLeft' incorporates:
+           *  Inport: '<Root>/m_activateRight'
+           */
+          if (isManualModeRequest(rtU.m_activateLeft, rtU.m_activateRight)) {
+            rtDW.is_MANUAL_MODE = IN_MANUAL_ON;
+          } else {
+            rtDW.frontLeftMotorActuate = 0.0;
+
+            /* Inport: '<Root>/m_frontLeftSwitch' */
+            hoisted_cond = (rtU.m_frontLeftSwitch && (rtDW.frontLeftMotorActuate
+              == 0.0));
+            if ((!hoisted_cond) || (!rtDW.condWasTrueAtLastTimeStep_1)) {
+              rtDW.durationLastReferenceTick_1 = rtDW.chartAbsoluteTimeCounter;
+            }
+
+            rtDW.condWasTrueAtLastTimeStep_1 = hoisted_cond;
+            rtDW.frontRightMotorActuate = 0.0;
+
+            /* Inport: '<Root>/m_frontRightSwitch' */
+            hoisted_cond = (rtU.m_frontRightSwitch &&
+                            (rtDW.frontRightMotorActuate == 0.0));
+            if ((!hoisted_cond) || (!rtDW.condWasTrueAtLastTimeStep_2)) {
+              rtDW.durationLastReferenceTick_2 = rtDW.chartAbsoluteTimeCounter;
+            }
+
+            rtDW.condWasTrueAtLastTimeStep_2 = hoisted_cond;
+          }
+          break;
+
+         case IN_MANUAL_ON:
+          /* Inport: '<Root>/m_activateLeft' incorporates:
+           *  Inport: '<Root>/m_activateRight'
+           */
+          if (!isManualModeRequest(rtU.m_activateLeft, rtU.m_activateRight)) {
+            rtDW.is_MANUAL_MODE = IN_MANUAL_OFF;
+          } else {
+            overrideMotorRequest(rtU.m_activateLeft, rtU.m_activateRight,
+                                 &rtDW.frontLeftMotorActuate,
+                                 &rtDW.frontRightMotorActuate);
+
+            /* Inport: '<Root>/m_frontLeftSwitch' */
+            hoisted_cond = (rtU.m_frontLeftSwitch && (rtDW.frontLeftMotorActuate
+              == 0.0));
+            if ((!hoisted_cond) || (!rtDW.condWasTrueAtLastTimeStep_1)) {
+              rtDW.durationLastReferenceTick_1 = rtDW.chartAbsoluteTimeCounter;
+            }
+
+            rtDW.condWasTrueAtLastTimeStep_1 = hoisted_cond;
 
             /* Inport: '<Root>/m_frontRightSwitch' */
             hoisted_cond = (rtU.m_frontRightSwitch &&
@@ -598,77 +746,7 @@ static void NORMAL_OPERATION(void)
       break;
 
      case IN_OFF_MODE:
-      switch (rtDW.DataTypeConversion) {
-       case CONTROL_MODE_AUTO:
-        rtDW.is_NORMAL_OPERATION = IN_AUTO_MODE;
-        rtDW.is_AUTO_MODE = IN_DYNAMIC_CONTROLLER;
-        rtDW.is_DYNAMIC_CONTROLLER = IN_CHECK_STATE;
-        break;
-
-       case CONTROL_MODE_MANUAL:
-        rtDW.is_NORMAL_OPERATION = IN_ON_MODE;
-        break;
-
-       default:
-        rtDW.frontLeftMotorActuate = 0.0;
-
-        /* Inport: '<Root>/m_frontLeftSwitch' */
-        hoisted_cond = (rtU.m_frontLeftSwitch && (rtDW.frontLeftMotorActuate ==
-          0.0));
-        if ((!hoisted_cond) || (!rtDW.condWasTrueAtLastTimeStep_1)) {
-          rtDW.durationLastReferenceTick_1 = rtDW.chartAbsoluteTimeCounter;
-        }
-
-        rtDW.condWasTrueAtLastTimeStep_1 = hoisted_cond;
-        rtDW.frontRightMotorActuate = 0.0;
-
-        /* Inport: '<Root>/m_frontRightSwitch' */
-        hoisted_cond = (rtU.m_frontRightSwitch && (rtDW.frontRightMotorActuate ==
-          0.0));
-        if ((!hoisted_cond) || (!rtDW.condWasTrueAtLastTimeStep_2)) {
-          rtDW.durationLastReferenceTick_2 = rtDW.chartAbsoluteTimeCounter;
-        }
-
-        rtDW.condWasTrueAtLastTimeStep_2 = hoisted_cond;
-        break;
-      }
-      break;
-
-     case IN_ON_MODE:
-      switch (rtDW.DataTypeConversion) {
-       case CONTROL_MODE_AUTO:
-        rtDW.is_NORMAL_OPERATION = IN_AUTO_MODE;
-        rtDW.is_AUTO_MODE = IN_DYNAMIC_CONTROLLER;
-        rtDW.is_DYNAMIC_CONTROLLER = IN_CHECK_STATE;
-        break;
-
-       case CONTROL_MODE_OFF:
-        rtDW.is_NORMAL_OPERATION = IN_OFF_MODE;
-        break;
-
-       default:
-        rtDW.frontLeftMotorActuate = 1.0;
-
-        /* Inport: '<Root>/m_frontLeftSwitch' */
-        hoisted_cond = (rtU.m_frontLeftSwitch && (rtDW.frontLeftMotorActuate ==
-          0.0));
-        if ((!hoisted_cond) || (!rtDW.condWasTrueAtLastTimeStep_1)) {
-          rtDW.durationLastReferenceTick_1 = rtDW.chartAbsoluteTimeCounter;
-        }
-
-        rtDW.condWasTrueAtLastTimeStep_1 = hoisted_cond;
-        rtDW.frontRightMotorActuate = 1.0;
-
-        /* Inport: '<Root>/m_frontRightSwitch' */
-        hoisted_cond = (rtU.m_frontRightSwitch && (rtDW.frontRightMotorActuate ==
-          0.0));
-        if ((!hoisted_cond) || (!rtDW.condWasTrueAtLastTimeStep_2)) {
-          rtDW.durationLastReferenceTick_2 = rtDW.chartAbsoluteTimeCounter;
-        }
-
-        rtDW.condWasTrueAtLastTimeStep_2 = hoisted_cond;
-        break;
-      }
+      OFF_MODE();
       break;
     }
   }
