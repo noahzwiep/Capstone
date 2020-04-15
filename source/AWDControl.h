@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'AWDControl'.
  *
- * Model version                  : 1.157
+ * Model version                  : 1.166
  * Simulink Coder version         : 9.0 (R2018b) 24-May-2018
- * C/C++ source code generated on : Wed Apr  8 20:52:49 2020
+ * C/C++ source code generated on : Wed Apr 15 17:26:45 2020
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: ARM Compatible->ARM Cortex
@@ -72,111 +72,16 @@ typedef struct {
 
 #endif
 
-#ifndef struct_md128433f1ef248ca39112e85ac51f2a3
-#define struct_md128433f1ef248ca39112e85ac51f2a3
-
-struct md128433f1ef248ca39112e85ac51f2a3
-{
-  int32_T S0_isInitialized;
-  real_T W0_states[38];
-  real_T P0_InitialStates;
-  real_T P1_Coefficients[39];
-};
-
-#endif                                 /*struct_md128433f1ef248ca39112e85ac51f2a3*/
-
-#ifndef typedef_dsp_FIRFilter_0
-#define typedef_dsp_FIRFilter_0
-
-typedef struct md128433f1ef248ca39112e85ac51f2a3 dsp_FIRFilter_0;
-
-#endif                                 /*typedef_dsp_FIRFilter_0*/
-
-#ifndef struct_md9mcuhcXxpHzpZb5firpbNC
-#define struct_md9mcuhcXxpHzpZb5firpbNC
-
-struct md9mcuhcXxpHzpZb5firpbNC
-{
-  boolean_T matlabCodegenIsDeleted;
-  int32_T isInitialized;
-  boolean_T isSetupComplete;
-  dsp_FIRFilter_0 cSFunObject;
-};
-
-#endif                                 /*struct_md9mcuhcXxpHzpZb5firpbNC*/
-
-#ifndef typedef_dspcodegen_FIRFilter
-#define typedef_dspcodegen_FIRFilter
-
-typedef struct md9mcuhcXxpHzpZb5firpbNC dspcodegen_FIRFilter;
-
-#endif                                 /*typedef_dspcodegen_FIRFilter*/
-
-#ifndef typedef_cell_wrap
-#define typedef_cell_wrap
-
-typedef struct {
-  uint32_T f1[8];
-} cell_wrap;
-
-#endif                                 /*typedef_cell_wrap*/
-
-#ifndef struct_mdyQhV8pWswhMUNQqaQbWMYF
-#define struct_mdyQhV8pWswhMUNQqaQbWMYF
-
-struct mdyQhV8pWswhMUNQqaQbWMYF
-{
-  boolean_T matlabCodegenIsDeleted;
-  int32_T isInitialized;
-  boolean_T isSetupComplete;
-  cell_wrap inputVarSize;
-  int32_T NumChannels;
-  dspcodegen_FIRFilter *FilterObj;
-};
-
-#endif                                 /*struct_mdyQhV8pWswhMUNQqaQbWMYF*/
-
-#ifndef typedef_dsp_LowpassFilter
-#define typedef_dsp_LowpassFilter
-
-typedef struct mdyQhV8pWswhMUNQqaQbWMYF dsp_LowpassFilter;
-
-#endif                                 /*typedef_dsp_LowpassFilter*/
-
-/* Block signals and states (default storage) for system '<S2>/Lowpass Filter1' */
-typedef struct {
-  dspcodegen_FIRFilter gobj_0;         /* '<S2>/Lowpass Filter1' */
-  dspcodegen_FIRFilter gobj_1;         /* '<S2>/Lowpass Filter1' */
-  dsp_LowpassFilter obj;               /* '<S2>/Lowpass Filter1' */
-  real_T LowpassFilter1_o;             /* '<S2>/Lowpass Filter1' */
-  boolean_T objisempty;                /* '<S2>/Lowpass Filter1' */
-  boolean_T isInitialized;             /* '<S2>/Lowpass Filter1' */
-} DW_LowpassFilter1;
-
 /* Block signals and states (default storage) for system '<Root>' */
 typedef struct {
-  DW_LowpassFilter1 LowpassFilter;     /* '<S2>/Lowpass Filter1' */
-  DW_LowpassFilter1 LowpassFilter1_p;  /* '<S2>/Lowpass Filter1' */
   VehicleState BusConversion_InsertedFor_Vehic;
-  real_T frontLeftMotorActuate;        /* '<Root>/Vehicle Dynamic Controller' */
-  real_T frontRightMotorActuate;       /* '<Root>/Vehicle Dynamic Controller' */
-  real_T rearSlipRatio;                /* '<Root>/Vehicle Dynamic Controller' */
-  real_T accelerationLong;             /* '<Root>/Vehicle Dynamic Controller' */
-  real_T accelerationLat;              /* '<Root>/Vehicle Dynamic Controller' */
-  real_T uDLookupTable1;               /* '<S7>/1-D Lookup Table1' */
-  real_T Subtract1;                    /* '<S7>/Subtract1' */
-  real_T Gain1;                        /* '<S8>/Gain1' */
-  real_T OutportBufferForc_frontRightMot;/* '<S8>/Gain1' */
   real_T rearAxleRPMOut;               /* '<S3>/Chart' */
   real_T frontLeftRPMOut;              /* '<S3>/Chart' */
   real_T frontRightRPMOut;             /* '<S3>/Chart' */
   real_T GPSvehicleSpeedOut;           /* '<S3>/Chart' */
-  int32_T sfEvent;                     /* '<Root>/Vehicle Dynamic Controller' */
   int32_T chartAbsoluteTimeCounter;    /* '<Root>/Vehicle Dynamic Controller' */
   int32_T durationLastReferenceTick_1; /* '<Root>/Vehicle Dynamic Controller' */
   int32_T durationLastReferenceTick_2; /* '<Root>/Vehicle Dynamic Controller' */
-  int32_T sfEvent_e;                   /* '<S3>/Chart' */
-  CONTROL_MODE DataTypeConversion;     /* '<S1>/Data Type Conversion' */
   uint8_T is_active_c3_AWDControl;     /* '<Root>/Vehicle Dynamic Controller' */
   uint8_T is_CHECK_FOR_CONTROL_ERRORS; /* '<Root>/Vehicle Dynamic Controller' */
   uint8_T is_active_CHECK_FOR_CONTROL_ERR;/* '<Root>/Vehicle Dynamic Controller' */
@@ -186,7 +91,7 @@ typedef struct {
   uint8_T is_AUTO_MODE;                /* '<Root>/Vehicle Dynamic Controller' */
   uint8_T is_DYNAMIC_CONTROLLER;       /* '<Root>/Vehicle Dynamic Controller' */
   uint8_T is_MANUAL_MODE;              /* '<Root>/Vehicle Dynamic Controller' */
-  uint8_T is_active_c1_AWDControl;     /* '<S3>/Chart' */
+  uint8_T is_active_c2_AWDControl;     /* '<S3>/Chart' */
   uint8_T is_STEERING_CHECK;           /* '<S3>/Chart' */
   uint8_T is_active_STEERING_CHECK;    /* '<S3>/Chart' */
   uint8_T is_REAR_AXEL;                /* '<S3>/Chart' */
@@ -212,22 +117,22 @@ typedef struct {
 
 /* Constant parameters (default storage) */
 typedef struct {
-  /* Expression: tanh([-5:5]) + 1
-   * Referenced by: '<S7>/1-D Lookup Table'
-   */
-  real_T uDLookupTable_tableData[11];
-
-  /* Pooled Parameter (Expression: [0:10])
+  /* Pooled Parameter (Mixed Expressions)
    * Referenced by:
    *   '<S7>/1-D Lookup Table'
    *   '<S7>/1-D Lookup Table1'
    */
-  real_T pooled7[11];
+  real_T pooled5[2];
 
-  /* Expression: -1*tanh([-5:5])
+  /* Expression: [1148,1150]
+   * Referenced by: '<S7>/1-D Lookup Table'
+   */
+  real_T uDLookupTable_bp01Data[2];
+
+  /* Expression: [-950 950]
    * Referenced by: '<S7>/1-D Lookup Table1'
    */
-  real_T uDLookupTable1_tableData[11];
+  real_T uDLookupTable1_bp01Data[2];
 } ConstP;
 
 /* External inputs (root inport signals with default storage) */

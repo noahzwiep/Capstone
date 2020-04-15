@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'AWDControl'.
  *
- * Model version                  : 1.157
+ * Model version                  : 1.166
  * Simulink Coder version         : 9.0 (R2018b) 24-May-2018
- * C/C++ source code generated on : Wed Apr  8 20:52:49 2020
+ * C/C++ source code generated on : Wed Apr 15 17:26:45 2020
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: ARM Compatible->ARM Cortex

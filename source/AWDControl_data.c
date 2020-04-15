@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'AWDControl'.
  *
- * Model version                  : 1.157
+ * Model version                  : 1.166
  * Simulink Coder version         : 9.0 (R2018b) 24-May-2018
- * C/C++ source code generated on : Wed Apr  8 20:52:49 2020
+ * C/C++ source code generated on : Wed Apr 15 17:26:45 2020
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: ARM Compatible->ARM Cortex
@@ -23,28 +23,22 @@
 
 /* Constant parameters (default storage) */
 const ConstP rtConstP = {
-  /* Expression: tanh([-5:5]) + 1
-   * Referenced by: '<S7>/1-D Lookup Table'
-   */
-  { 9.0795737404891774E-5, 0.000670700260932966, 0.0049452463132695357,
-    0.0359724199241831, 0.23840584404423515, 1.0, 1.7615941559557649,
-    1.9640275800758169, 1.9950547536867305, 1.999329299739067, 1.999909204262595
-  },
-
-  /* Pooled Parameter (Expression: [0:10])
+  /* Pooled Parameter (Mixed Expressions)
    * Referenced by:
    *   '<S7>/1-D Lookup Table'
    *   '<S7>/1-D Lookup Table1'
    */
-  { 0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0 },
+  { 1.0, 0.0 },
 
-  /* Expression: -1*tanh([-5:5])
+  /* Expression: [1148,1150]
+   * Referenced by: '<S7>/1-D Lookup Table'
+   */
+  { 1148.0, 1150.0 },
+
+  /* Expression: [-950 950]
    * Referenced by: '<S7>/1-D Lookup Table1'
    */
-  { 0.99990920426259511, 0.999329299739067, 0.99505475368673046,
-    0.9640275800758169, 0.76159415595576485, -0.0, -0.76159415595576485,
-    -0.9640275800758169, -0.99505475368673046, -0.999329299739067,
-    -0.99990920426259511 }
+  { -950.0, 950.0 }
 };
 
 /*

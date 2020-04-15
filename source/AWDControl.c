@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'AWDControl'.
  *
- * Model version                  : 1.157
+ * Model version                  : 1.166
  * Simulink Coder version         : 9.0 (R2018b) 24-May-2018
- * C/C++ source code generated on : Wed Apr  8 20:52:49 2020
+ * C/C++ source code generated on : Wed Apr 15 17:26:45 2020
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: ARM Compatible->ARM Cortex
@@ -60,30 +60,18 @@ RT_MODEL rtM_;
 RT_MODEL *const rtM = &rtM_;
 static real_T look1_binlag(real_T u0, const real_T bp0[], const real_T table[],
   uint32_T maxIndex);
-static void LowpassFilter1_Init(DW_LowpassFilter1 *localDW);
-static void LowpassFilter1_Start(DW_LowpassFilter1 *localDW);
-static void LowpassFilter1(real_T rtu_0, DW_LowpassFilter1 *localDW);
 
 /* Forward declaration for local functions */
-static void SystemCore_release(dspcodegen_FIRFilter *obj);
-static void LPHPFilterBase_releaseImpl(dsp_LowpassFilter *obj);
-static void SystemCore_releaseWrapper(dsp_LowpassFilter *obj);
-static void SystemCore_release_m(dsp_LowpassFilter *obj);
-static void SystemCore_delete_a(dsp_LowpassFilter *obj);
-static void matlabCodegenHandle_matlabCod_g(dsp_LowpassFilter *obj);
-static void SystemCore_delete(dspcodegen_FIRFilter *obj);
-static void matlabCodegenHandle_matlabCodeg(dspcodegen_FIRFilter *obj);
-
-/* Forward declaration for local functions */
-static void STEERING_CHECK(void);
+static void STEERING_CHECK(int32_T *sfEvent_e);
 static boolean_T isManualModeRequest(boolean_T frontLeftMotorOverride, boolean_T
   frontRightmotorOverride);
 static boolean_T isCarTurning(real_T steeringAngle);
 static boolean_T isVehicleSlipping(real_T rearSR);
 static void overrideMotorRequest(boolean_T motorOverride1, boolean_T
   motorOverride2, real_T *motor1, real_T *motor2);
-static void OFF_MODE(void);
-static void NORMAL_OPERATION(void);
+static void OFF_MODE(const CONTROL_MODE *DataTypeConversion);
+static void NORMAL_OPERATION(const CONTROL_MODE *DataTypeConversion, const
+  int32_T *sfEvent);
 static real_T look1_binlag(real_T u0, const real_T bp0[], const real_T table[],
   uint32_T maxIndex)
 {
@@ -141,181 +129,8 @@ static real_T look1_binlag(real_T u0, const real_T bp0[], const real_T table[],
   return y;
 }
 
-static void SystemCore_release(dspcodegen_FIRFilter *obj)
-{
-  if (obj->isInitialized == 1) {
-    obj->isInitialized = 2;
-  }
-}
-
-static void LPHPFilterBase_releaseImpl(dsp_LowpassFilter *obj)
-{
-  SystemCore_release(obj->FilterObj);
-  obj->NumChannels = -1;
-}
-
-static void SystemCore_releaseWrapper(dsp_LowpassFilter *obj)
-{
-  if (obj->isSetupComplete) {
-    LPHPFilterBase_releaseImpl(obj);
-  }
-}
-
-static void SystemCore_release_m(dsp_LowpassFilter *obj)
-{
-  if (obj->isInitialized == 1) {
-    SystemCore_releaseWrapper(obj);
-  }
-}
-
-static void SystemCore_delete_a(dsp_LowpassFilter *obj)
-{
-  SystemCore_release_m(obj);
-}
-
-static void matlabCodegenHandle_matlabCod_g(dsp_LowpassFilter *obj)
-{
-  if (!obj->matlabCodegenIsDeleted) {
-    obj->matlabCodegenIsDeleted = true;
-    SystemCore_delete_a(obj);
-  }
-}
-
-static void SystemCore_delete(dspcodegen_FIRFilter *obj)
-{
-  SystemCore_release(obj);
-}
-
-static void matlabCodegenHandle_matlabCodeg(dspcodegen_FIRFilter *obj)
-{
-  if (!obj->matlabCodegenIsDeleted) {
-    obj->matlabCodegenIsDeleted = true;
-    SystemCore_delete(obj);
-  }
-}
-
-/*
- * System initialize for atomic system:
- *    synthesized block
- *    synthesized block
- */
-static void LowpassFilter1_Init(DW_LowpassFilter1 *localDW)
-{
-  int32_T i;
-
-  /* InitializeConditions for MATLABSystem: '<S2>/Lowpass Filter1' */
-  if (localDW->obj.FilterObj->isInitialized == 1) {
-    /* System object Initialization function: dsp.FIRFilter */
-    for (i = 0; i < 38; i++) {
-      localDW->obj.FilterObj->cSFunObject.W0_states[i] = localDW->
-        obj.FilterObj->cSFunObject.P0_InitialStates;
-    }
-  }
-
-  /* End of InitializeConditions for MATLABSystem: '<S2>/Lowpass Filter1' */
-}
-
-/*
- * Start for atomic system:
- *    synthesized block
- *    synthesized block
- */
-static void LowpassFilter1_Start(DW_LowpassFilter1 *localDW)
-{
-  dspcodegen_FIRFilter *iobj_0;
-  static const real_T tmp[39] = { -0.00059194361517663689,
-    -0.0020231187609940074, -0.0021060229913033154, 0.0012560050342482782,
-    0.0045836073548239592, 0.00081354750291903971, -0.0074945947911449614,
-    -0.0059854409238031476, 0.0089175430449157777, 0.014763032770771055,
-    -0.0061136921890367051, -0.026666288251129273, -0.00451612337795531,
-    0.040069256336854729, 0.028624786731400381, -0.052515463472640085,
-    -0.082387824369927212, 0.061352556551937866, 0.30991387818783289,
-    0.43544828894513982, 0.30991387818783289, 0.061352556551937866,
-    -0.082387824369927212, -0.052515463472640085, 0.028624786731400381,
-    0.040069256336854729, -0.00451612337795531, -0.026666288251129273,
-    -0.0061136921890367051, 0.014763032770771055, 0.0089175430449157777,
-    -0.0059854409238031476, -0.0074945947911449614, 0.00081354750291903971,
-    0.0045836073548239592, 0.0012560050342482782, -0.0021060229913033154,
-    -0.0020231187609940074, -0.00059194361517663689 };
-
-  int32_T i;
-
-  /* Start for MATLABSystem: '<S2>/Lowpass Filter1' */
-  localDW->gobj_1.matlabCodegenIsDeleted = true;
-  localDW->gobj_0.matlabCodegenIsDeleted = true;
-  localDW->obj.matlabCodegenIsDeleted = true;
-  localDW->obj.isInitialized = 0;
-  localDW->obj.NumChannels = -1;
-  localDW->obj.matlabCodegenIsDeleted = false;
-  localDW->objisempty = true;
-  iobj_0 = &localDW->gobj_0;
-  localDW->obj.isSetupComplete = false;
-  localDW->obj.isInitialized = 1;
-  localDW->gobj_0.isInitialized = 0;
-
-  /* System object Constructor function: dsp.FIRFilter */
-  iobj_0->cSFunObject.P0_InitialStates = 0.0;
-  for (i = 0; i < 39; i++) {
-    iobj_0->cSFunObject.P1_Coefficients[i] = tmp[i];
-  }
-
-  localDW->gobj_0.matlabCodegenIsDeleted = false;
-  localDW->obj.FilterObj = &localDW->gobj_0;
-  localDW->obj.NumChannels = 1;
-  localDW->obj.isSetupComplete = true;
-
-  /* End of Start for MATLABSystem: '<S2>/Lowpass Filter1' */
-}
-
-/*
- * Output and update for atomic system:
- *    synthesized block
- *    synthesized block
- */
-static void LowpassFilter1(real_T rtu_0, DW_LowpassFilter1 *localDW)
-{
-  dsp_FIRFilter_0 *obj;
-  real_T acc1;
-  real_T acc2;
-  int32_T j;
-
-  /* MATLABSystem: '<S2>/Lowpass Filter1' */
-  if (localDW->obj.FilterObj->isInitialized != 1) {
-    localDW->obj.FilterObj->isSetupComplete = false;
-    localDW->obj.FilterObj->isInitialized = 1;
-    localDW->obj.FilterObj->isSetupComplete = true;
-
-    /* System object Initialization function: dsp.FIRFilter */
-    for (j = 0; j < 38; j++) {
-      localDW->obj.FilterObj->cSFunObject.W0_states[j] = localDW->
-        obj.FilterObj->cSFunObject.P0_InitialStates;
-    }
-  }
-
-  obj = &localDW->obj.FilterObj->cSFunObject;
-
-  /* System object Outputs function: dsp.FIRFilter */
-  /* Consume delay line and beginning of input samples */
-  acc2 = rtu_0 * localDW->obj.FilterObj->cSFunObject.P1_Coefficients[0];
-  acc1 = acc2;
-  for (j = 0; j < 38; j++) {
-    acc2 = obj->P1_Coefficients[1 + j] * obj->W0_states[j];
-    acc1 += acc2;
-  }
-
-  /* Update delay line for next frame */
-  for (j = 36; j >= 0; j--) {
-    obj->W0_states[1 + j] = obj->W0_states[j];
-  }
-
-  localDW->obj.FilterObj->cSFunObject.W0_states[0] = rtu_0;
-  localDW->LowpassFilter1_o = acc1;
-
-  /* End of MATLABSystem: '<S2>/Lowpass Filter1' */
-}
-
 /* Function for Chart: '<S3>/Chart' */
-static void STEERING_CHECK(void)
+static void STEERING_CHECK(int32_T *sfEvent_e)
 {
   int32_T b_previousEvent;
 
@@ -324,8 +139,8 @@ static void STEERING_CHECK(void)
    case IN_FAILURE:
     /* The engine speed data is no longer available. */
     rtDW.BusConversion_InsertedFor_Vehic.steeringAngle = 0.0;
-    b_previousEvent = rtDW.sfEvent_e;
-    rtDW.sfEvent_e = event_sensorFailed;
+    b_previousEvent = *sfEvent_e;
+    *sfEvent_e = event_sensorFailed;
     if (rtDW.is_active_ERROR_STATE != 0U) {
       switch (rtDW.is_ERROR_STATE) {
        case IN_ERRORS_DETECTED:
@@ -333,7 +148,7 @@ static void STEERING_CHECK(void)
         break;
 
        case IN_NO_ERRORS:
-        if (rtDW.sfEvent_e == event_sensorFailed) {
+        if (*sfEvent_e == event_sensorFailed) {
           rtDW.is_ERROR_STATE = IN_ERRORS_DETECTED;
           rtDW.sensorError = true;
         }
@@ -341,7 +156,7 @@ static void STEERING_CHECK(void)
       }
     }
 
-    rtDW.sfEvent_e = b_previousEvent;
+    *sfEvent_e = b_previousEvent;
     break;
 
    case IN_NORMAL:
@@ -398,10 +213,10 @@ static void overrideMotorRequest(boolean_T motorOverride1, boolean_T
 }
 
 /* Function for Chart: '<Root>/Vehicle Dynamic Controller' */
-static void OFF_MODE(void)
+static void OFF_MODE(const CONTROL_MODE *DataTypeConversion)
 {
   boolean_T hoisted_cond;
-  switch (rtDW.DataTypeConversion) {
+  switch (*DataTypeConversion) {
    case CONTROL_MODE_AUTO:
     rtDW.is_NORMAL_OPERATION = IN_AUTO_MODE;
     rtDW.is_AUTO_MODE = IN_DYNAMIC_CONTROLLER;
@@ -414,19 +229,27 @@ static void OFF_MODE(void)
     break;
 
    default:
-    rtDW.frontLeftMotorActuate = 0.0;
+    /* Outport: '<Root>/c_frontLeftMotorActuate' */
+    rtY.c_frontLeftMotorActuate = 0.0;
 
-    /* Inport: '<Root>/m_frontLeftSwitch' */
-    hoisted_cond = (rtU.m_frontLeftSwitch && (rtDW.frontLeftMotorActuate == 0.0));
+    /* Inport: '<Root>/m_frontLeftSwitch' incorporates:
+     *  Outport: '<Root>/c_frontLeftMotorActuate'
+     */
+    hoisted_cond = ((!rtU.m_frontLeftSwitch) && (rtY.c_frontLeftMotorActuate ==
+      0.0));
     if ((!hoisted_cond) || (!rtDW.condWasTrueAtLastTimeStep_1)) {
       rtDW.durationLastReferenceTick_1 = rtDW.chartAbsoluteTimeCounter;
     }
 
     rtDW.condWasTrueAtLastTimeStep_1 = hoisted_cond;
-    rtDW.frontRightMotorActuate = 0.0;
 
-    /* Inport: '<Root>/m_frontRightSwitch' */
-    hoisted_cond = (rtU.m_frontRightSwitch && (rtDW.frontRightMotorActuate ==
+    /* Outport: '<Root>/c_frontRightMotorActuate' */
+    rtY.c_frontRightMotorActuate = 0.0;
+
+    /* Inport: '<Root>/m_frontRightSwitch' incorporates:
+     *  Outport: '<Root>/c_frontRightMotorActuate'
+     */
+    hoisted_cond = ((!rtU.m_frontRightSwitch) && (rtY.c_frontRightMotorActuate ==
       0.0));
     if ((!hoisted_cond) || (!rtDW.condWasTrueAtLastTimeStep_2)) {
       rtDW.durationLastReferenceTick_2 = rtDW.chartAbsoluteTimeCounter;
@@ -438,10 +261,14 @@ static void OFF_MODE(void)
 }
 
 /* Function for Chart: '<Root>/Vehicle Dynamic Controller' */
-static void NORMAL_OPERATION(void)
+static void NORMAL_OPERATION(const CONTROL_MODE *DataTypeConversion, const
+  int32_T *sfEvent)
 {
   boolean_T hoisted_cond;
-  if (rtDW.sensorError || (rtDW.sfEvent == event_motorFailed)) {
+  real_T rtb_uDLookupTable1;
+  real_T rtb_Multiply1;
+  real_T rtb_Multiply;
+  if (rtDW.sensorError || (*sfEvent == event_motorFailed)) {
     if (rtDW.is_NORMAL_OPERATION == IN_AUTO_MODE) {
       rtDW.is_DYNAMIC_CONTROLLER = IN_NO_ACTIVE_CHILD;
       rtDW.is_AUTO_MODE = IN_NO_ACTIVE_CHILD;
@@ -458,19 +285,28 @@ static void NORMAL_OPERATION(void)
 
     /* Outport: '<Root>/c_frontRightMalfunction' */
     rtY.c_frontRightMalfunction = true;
-    rtDW.frontLeftMotorActuate = 0.0;
 
-    /* Inport: '<Root>/m_frontLeftSwitch' */
-    hoisted_cond = (rtU.m_frontLeftSwitch && (rtDW.frontLeftMotorActuate == 0.0));
+    /* Outport: '<Root>/c_frontLeftMotorActuate' */
+    rtY.c_frontLeftMotorActuate = 0.0;
+
+    /* Inport: '<Root>/m_frontLeftSwitch' incorporates:
+     *  Outport: '<Root>/c_frontLeftMotorActuate'
+     */
+    hoisted_cond = ((!rtU.m_frontLeftSwitch) && (rtY.c_frontLeftMotorActuate ==
+      0.0));
     if ((!hoisted_cond) || (!rtDW.condWasTrueAtLastTimeStep_1)) {
       rtDW.durationLastReferenceTick_1 = rtDW.chartAbsoluteTimeCounter;
     }
 
     rtDW.condWasTrueAtLastTimeStep_1 = hoisted_cond;
-    rtDW.frontRightMotorActuate = 0.0;
 
-    /* Inport: '<Root>/m_frontRightSwitch' */
-    hoisted_cond = (rtU.m_frontRightSwitch && (rtDW.frontRightMotorActuate ==
+    /* Outport: '<Root>/c_frontRightMotorActuate' */
+    rtY.c_frontRightMotorActuate = 0.0;
+
+    /* Inport: '<Root>/m_frontRightSwitch' incorporates:
+     *  Outport: '<Root>/c_frontRightMotorActuate'
+     */
+    hoisted_cond = ((!rtU.m_frontRightSwitch) && (rtY.c_frontRightMotorActuate ==
       0.0));
     if ((!hoisted_cond) || (!rtDW.condWasTrueAtLastTimeStep_2)) {
       rtDW.durationLastReferenceTick_2 = rtDW.chartAbsoluteTimeCounter;
@@ -480,7 +316,7 @@ static void NORMAL_OPERATION(void)
   } else {
     switch (rtDW.is_NORMAL_OPERATION) {
      case IN_AUTO_MODE:
-      switch (rtDW.DataTypeConversion) {
+      switch (*DataTypeConversion) {
        case CONTROL_MODE_OFF:
         rtDW.is_DYNAMIC_CONTROLLER = IN_NO_ACTIVE_CHILD;
         rtDW.is_AUTO_MODE = IN_NO_ACTIVE_CHILD;
@@ -522,12 +358,19 @@ static void NORMAL_OPERATION(void)
                   (rtDW.BusConversion_InsertedFor_Vehic.steeringAngle)) {
                 rtDW.is_DYNAMIC_CONTROLLER = IN_CHECK_STATE;
               } else {
-                rtDW.accelerationLong =
-                  rtDW.BusConversion_InsertedFor_Vehic.accelerationX;
-                rtDW.accelerationLat =
-                  rtDW.BusConversion_InsertedFor_Vehic.accelerationY;
-
                 /* Outputs for Function Call SubSystem: '<S4>/AWD_CONTROL.NORMAL_OPERATION.AUTO_MODE.torqueVectoring' */
+                /* Lookup_n-D: '<S7>/1-D Lookup Table' incorporates:
+                 *  Constant: '<S7>/Wheelbase'
+                 *  Gain: '<S7>/Vehicle Mass3'
+                 *  Gain: '<S7>/height of CM1'
+                 *  Product: '<S7>/Divide3'
+                 *  Sum: '<S7>/Add'
+                 */
+                rtb_Multiply1 = look1_binlag(225.0 *
+                  rtDW.BusConversion_InsertedFor_Vehic.accelerationX * 0.5 /
+                  1.484 + 1147.77, rtConstP.uDLookupTable_bp01Data,
+                  rtConstP.pooled5, 1U);
+
                 /* Lookup_n-D: '<S7>/1-D Lookup Table1' incorporates:
                  *  Constant: '<S7>/TrackWidth'
                  *  Gain: '<S7>/Front roll stiffness'
@@ -535,39 +378,62 @@ static void NORMAL_OPERATION(void)
                  *  Gain: '<S7>/height of CM'
                  *  Product: '<S7>/Divide1'
                  */
-                rtDW.uDLookupTable1 = look1_binlag(397.07 * rtDW.accelerationLat
-                  * 225.0 * 0.5 / 2480.31, rtConstP.pooled7,
-                  rtConstP.uDLookupTable1_tableData, 10U);
+                rtb_uDLookupTable1 = look1_binlag(6.9301788608938839 *
+                  rtDW.BusConversion_InsertedFor_Vehic.accelerationY * 225.0 *
+                  0.5 / 1.6002032004064011, rtConstP.uDLookupTable1_bp01Data,
+                  rtConstP.pooled5, 1U);
 
-                /* Sum: '<S7>/Subtract1' incorporates:
-                 *  Constant: '<S7>/Wheelbase'
-                 *  Gain: '<S7>/Vehicle Mass3'
-                 *  Gain: '<S7>/height of CM1'
-                 *  Lookup_n-D: '<S7>/1-D Lookup Table'
-                 *  Product: '<S7>/Divide3'
-                 *  Sum: '<S7>/Add'
+                /* Product: '<S7>/Multiply' */
+                rtb_Multiply = rtb_uDLookupTable1 * rtb_Multiply1;
+
+                /* Product: '<S7>/Multiply1' incorporates:
+                 *  Constant: '<S7>/Constant3'
+                 *  Sum: '<S7>/Subtract'
                  */
-                rtDW.Subtract1 = look1_binlag(2205.2144174608056 - 225.0 *
-                  rtDW.accelerationLong * 0.5 / 1.484, rtConstP.pooled7,
-                  rtConstP.uDLookupTable_tableData, 10U) - rtDW.uDLookupTable1;
+                rtb_Multiply1 *= 1.0 - rtb_uDLookupTable1;
 
+                /* Saturate: '<S7>/Saturation' */
+                if (rtb_Multiply > 1.0) {
+                  rtY.c_frontLeftMotorActuate = 1.0;
+                } else if (rtb_Multiply < 0.0) {
+                  rtY.c_frontLeftMotorActuate = 0.0;
+                } else {
+                  rtY.c_frontLeftMotorActuate = rtb_Multiply;
+                }
+
+                /* End of Saturate: '<S7>/Saturation' */
                 /* End of Outputs for SubSystem: '<S4>/AWD_CONTROL.NORMAL_OPERATION.AUTO_MODE.torqueVectoring' */
-                rtDW.frontLeftMotorActuate = rtDW.uDLookupTable1;
 
-                /* Inport: '<Root>/m_frontLeftSwitch' */
-                hoisted_cond = (rtU.m_frontLeftSwitch &&
-                                (rtDW.frontLeftMotorActuate == 0.0));
+                /* Inport: '<Root>/m_frontLeftSwitch' incorporates:
+                 *  Outport: '<Root>/c_frontLeftMotorActuate'
+                 */
+                hoisted_cond = ((!rtU.m_frontLeftSwitch) &&
+                                (rtY.c_frontLeftMotorActuate == 0.0));
                 if ((!hoisted_cond) || (!rtDW.condWasTrueAtLastTimeStep_1)) {
                   rtDW.durationLastReferenceTick_1 =
                     rtDW.chartAbsoluteTimeCounter;
                 }
 
                 rtDW.condWasTrueAtLastTimeStep_1 = hoisted_cond;
-                rtDW.frontRightMotorActuate = rtDW.Subtract1;
 
-                /* Inport: '<Root>/m_frontRightSwitch' */
-                hoisted_cond = (rtU.m_frontRightSwitch &&
-                                (rtDW.frontRightMotorActuate == 0.0));
+                /* Outputs for Function Call SubSystem: '<S4>/AWD_CONTROL.NORMAL_OPERATION.AUTO_MODE.torqueVectoring' */
+                /* Saturate: '<S7>/Saturation1' */
+                if (rtb_Multiply1 > 1.0) {
+                  rtY.c_frontRightMotorActuate = 1.0;
+                } else if (rtb_Multiply1 < 0.0) {
+                  rtY.c_frontRightMotorActuate = 0.0;
+                } else {
+                  rtY.c_frontRightMotorActuate = rtb_Multiply1;
+                }
+
+                /* End of Saturate: '<S7>/Saturation1' */
+                /* End of Outputs for SubSystem: '<S4>/AWD_CONTROL.NORMAL_OPERATION.AUTO_MODE.torqueVectoring' */
+
+                /* Inport: '<Root>/m_frontRightSwitch' incorporates:
+                 *  Outport: '<Root>/c_frontRightMotorActuate'
+                 */
+                hoisted_cond = ((!rtU.m_frontRightSwitch) &&
+                                (rtY.c_frontRightMotorActuate == 0.0));
                 if ((!hoisted_cond) || (!rtDW.condWasTrueAtLastTimeStep_2)) {
                   rtDW.durationLastReferenceTick_2 =
                     rtDW.chartAbsoluteTimeCounter;
@@ -585,37 +451,43 @@ static void NORMAL_OPERATION(void)
                          (rtDW.BusConversion_InsertedFor_Vehic.steeringAngle)) {
                 rtDW.is_DYNAMIC_CONTROLLER = IN_DYNAMIC_CONTROL;
               } else {
-                rtDW.rearSlipRatio =
-                  rtDW.BusConversion_InsertedFor_Vehic.slipRatioRear;
-
                 /* Outputs for Function Call SubSystem: '<S4>/AWD_CONTROL.NORMAL_OPERATION.AUTO_MODE.tractionControl' */
-                /* Gain: '<S8>/Gain1' incorporates:
+                /* Outport: '<Root>/c_frontLeftMotorActuate' incorporates:
                  *  Constant: '<S8>/Desired slip ratio'
                  *  Sum: '<S8>/Subtract'
                  */
-                rtDW.Gain1 = rtDW.rearSlipRatio - 0.4;
-
-                /* SignalConversion: '<S8>/OutportBufferForc_frontRightMotorActuate' */
-                rtDW.OutportBufferForc_frontRightMot = rtDW.Gain1;
+                rtY.c_frontLeftMotorActuate =
+                  rtDW.BusConversion_InsertedFor_Vehic.slipRatioRear - 0.4;
 
                 /* End of Outputs for SubSystem: '<S4>/AWD_CONTROL.NORMAL_OPERATION.AUTO_MODE.tractionControl' */
-                rtDW.frontLeftMotorActuate = rtDW.Gain1;
 
-                /* Inport: '<Root>/m_frontLeftSwitch' */
-                hoisted_cond = (rtU.m_frontLeftSwitch &&
-                                (rtDW.frontLeftMotorActuate == 0.0));
+                /* Inport: '<Root>/m_frontLeftSwitch' incorporates:
+                 *  Outport: '<Root>/c_frontLeftMotorActuate'
+                 */
+                hoisted_cond = ((!rtU.m_frontLeftSwitch) &&
+                                (rtY.c_frontLeftMotorActuate == 0.0));
                 if ((!hoisted_cond) || (!rtDW.condWasTrueAtLastTimeStep_1)) {
                   rtDW.durationLastReferenceTick_1 =
                     rtDW.chartAbsoluteTimeCounter;
                 }
 
                 rtDW.condWasTrueAtLastTimeStep_1 = hoisted_cond;
-                rtDW.frontRightMotorActuate =
-                  rtDW.OutportBufferForc_frontRightMot;
 
-                /* Inport: '<Root>/m_frontRightSwitch' */
-                hoisted_cond = (rtU.m_frontRightSwitch &&
-                                (rtDW.frontRightMotorActuate == 0.0));
+                /* Outputs for Function Call SubSystem: '<S4>/AWD_CONTROL.NORMAL_OPERATION.AUTO_MODE.tractionControl' */
+                /* Outport: '<Root>/c_frontRightMotorActuate' incorporates:
+                 *  Constant: '<S8>/Desired slip ratio'
+                 *  Sum: '<S8>/Subtract'
+                 */
+                rtY.c_frontRightMotorActuate =
+                  rtDW.BusConversion_InsertedFor_Vehic.slipRatioRear - 0.4;
+
+                /* End of Outputs for SubSystem: '<S4>/AWD_CONTROL.NORMAL_OPERATION.AUTO_MODE.tractionControl' */
+
+                /* Inport: '<Root>/m_frontRightSwitch' incorporates:
+                 *  Outport: '<Root>/c_frontRightMotorActuate'
+                 */
+                hoisted_cond = ((!rtU.m_frontRightSwitch) &&
+                                (rtY.c_frontRightMotorActuate == 0.0));
                 if ((!hoisted_cond) || (!rtDW.condWasTrueAtLastTimeStep_2)) {
                   rtDW.durationLastReferenceTick_2 =
                     rtDW.chartAbsoluteTimeCounter;
@@ -636,22 +508,29 @@ static void NORMAL_OPERATION(void)
             rtDW.is_AUTO_MODE = IN_DYNAMIC_CONTROLLER;
             rtDW.is_DYNAMIC_CONTROLLER = IN_CHECK_STATE;
           } else {
+            /* Outport: '<Root>/c_frontRightMotorActuate' incorporates:
+             *  Outport: '<Root>/c_frontLeftMotorActuate'
+             */
             overrideMotorRequest(rtU.m_activateLeft, rtU.m_activateRight,
-                                 &rtDW.frontLeftMotorActuate,
-                                 &rtDW.frontRightMotorActuate);
+                                 &rtY.c_frontLeftMotorActuate,
+                                 &rtY.c_frontRightMotorActuate);
 
-            /* Inport: '<Root>/m_frontLeftSwitch' */
-            hoisted_cond = (rtU.m_frontLeftSwitch && (rtDW.frontLeftMotorActuate
-              == 0.0));
+            /* Inport: '<Root>/m_frontLeftSwitch' incorporates:
+             *  Outport: '<Root>/c_frontLeftMotorActuate'
+             */
+            hoisted_cond = ((!rtU.m_frontLeftSwitch) &&
+                            (rtY.c_frontLeftMotorActuate == 0.0));
             if ((!hoisted_cond) || (!rtDW.condWasTrueAtLastTimeStep_1)) {
               rtDW.durationLastReferenceTick_1 = rtDW.chartAbsoluteTimeCounter;
             }
 
             rtDW.condWasTrueAtLastTimeStep_1 = hoisted_cond;
 
-            /* Inport: '<Root>/m_frontRightSwitch' */
-            hoisted_cond = (rtU.m_frontRightSwitch &&
-                            (rtDW.frontRightMotorActuate == 0.0));
+            /* Inport: '<Root>/m_frontRightSwitch' incorporates:
+             *  Outport: '<Root>/c_frontRightMotorActuate'
+             */
+            hoisted_cond = ((!rtU.m_frontRightSwitch) &&
+                            (rtY.c_frontRightMotorActuate == 0.0));
             if ((!hoisted_cond) || (!rtDW.condWasTrueAtLastTimeStep_2)) {
               rtDW.durationLastReferenceTick_2 = rtDW.chartAbsoluteTimeCounter;
             }
@@ -665,7 +544,7 @@ static void NORMAL_OPERATION(void)
       break;
 
      case IN_MANUAL_MODE:
-      switch (rtDW.DataTypeConversion) {
+      switch (*DataTypeConversion) {
        case CONTROL_MODE_AUTO:
         rtDW.is_MANUAL_MODE = IN_NO_ACTIVE_CHILD;
         rtDW.is_NORMAL_OPERATION = IN_AUTO_MODE;
@@ -687,21 +566,28 @@ static void NORMAL_OPERATION(void)
           if (isManualModeRequest(rtU.m_activateLeft, rtU.m_activateRight)) {
             rtDW.is_MANUAL_MODE = IN_MANUAL_ON;
           } else {
-            rtDW.frontLeftMotorActuate = 0.0;
+            /* Outport: '<Root>/c_frontLeftMotorActuate' */
+            rtY.c_frontLeftMotorActuate = 0.0;
 
-            /* Inport: '<Root>/m_frontLeftSwitch' */
-            hoisted_cond = (rtU.m_frontLeftSwitch && (rtDW.frontLeftMotorActuate
-              == 0.0));
+            /* Inport: '<Root>/m_frontLeftSwitch' incorporates:
+             *  Outport: '<Root>/c_frontLeftMotorActuate'
+             */
+            hoisted_cond = ((!rtU.m_frontLeftSwitch) &&
+                            (rtY.c_frontLeftMotorActuate == 0.0));
             if ((!hoisted_cond) || (!rtDW.condWasTrueAtLastTimeStep_1)) {
               rtDW.durationLastReferenceTick_1 = rtDW.chartAbsoluteTimeCounter;
             }
 
             rtDW.condWasTrueAtLastTimeStep_1 = hoisted_cond;
-            rtDW.frontRightMotorActuate = 0.0;
 
-            /* Inport: '<Root>/m_frontRightSwitch' */
-            hoisted_cond = (rtU.m_frontRightSwitch &&
-                            (rtDW.frontRightMotorActuate == 0.0));
+            /* Outport: '<Root>/c_frontRightMotorActuate' */
+            rtY.c_frontRightMotorActuate = 0.0;
+
+            /* Inport: '<Root>/m_frontRightSwitch' incorporates:
+             *  Outport: '<Root>/c_frontRightMotorActuate'
+             */
+            hoisted_cond = ((!rtU.m_frontRightSwitch) &&
+                            (rtY.c_frontRightMotorActuate == 0.0));
             if ((!hoisted_cond) || (!rtDW.condWasTrueAtLastTimeStep_2)) {
               rtDW.durationLastReferenceTick_2 = rtDW.chartAbsoluteTimeCounter;
             }
@@ -717,22 +603,29 @@ static void NORMAL_OPERATION(void)
           if (!isManualModeRequest(rtU.m_activateLeft, rtU.m_activateRight)) {
             rtDW.is_MANUAL_MODE = IN_MANUAL_OFF;
           } else {
+            /* Outport: '<Root>/c_frontRightMotorActuate' incorporates:
+             *  Outport: '<Root>/c_frontLeftMotorActuate'
+             */
             overrideMotorRequest(rtU.m_activateLeft, rtU.m_activateRight,
-                                 &rtDW.frontLeftMotorActuate,
-                                 &rtDW.frontRightMotorActuate);
+                                 &rtY.c_frontLeftMotorActuate,
+                                 &rtY.c_frontRightMotorActuate);
 
-            /* Inport: '<Root>/m_frontLeftSwitch' */
-            hoisted_cond = (rtU.m_frontLeftSwitch && (rtDW.frontLeftMotorActuate
-              == 0.0));
+            /* Inport: '<Root>/m_frontLeftSwitch' incorporates:
+             *  Outport: '<Root>/c_frontLeftMotorActuate'
+             */
+            hoisted_cond = ((!rtU.m_frontLeftSwitch) &&
+                            (rtY.c_frontLeftMotorActuate == 0.0));
             if ((!hoisted_cond) || (!rtDW.condWasTrueAtLastTimeStep_1)) {
               rtDW.durationLastReferenceTick_1 = rtDW.chartAbsoluteTimeCounter;
             }
 
             rtDW.condWasTrueAtLastTimeStep_1 = hoisted_cond;
 
-            /* Inport: '<Root>/m_frontRightSwitch' */
-            hoisted_cond = (rtU.m_frontRightSwitch &&
-                            (rtDW.frontRightMotorActuate == 0.0));
+            /* Inport: '<Root>/m_frontRightSwitch' incorporates:
+             *  Outport: '<Root>/c_frontRightMotorActuate'
+             */
+            hoisted_cond = ((!rtU.m_frontRightSwitch) &&
+                            (rtY.c_frontRightMotorActuate == 0.0));
             if ((!hoisted_cond) || (!rtDW.condWasTrueAtLastTimeStep_2)) {
               rtDW.durationLastReferenceTick_2 = rtDW.chartAbsoluteTimeCounter;
             }
@@ -746,7 +639,7 @@ static void NORMAL_OPERATION(void)
       break;
 
      case IN_OFF_MODE:
-      OFF_MODE();
+      OFF_MODE(DataTypeConversion);
       break;
     }
   }
@@ -755,9 +648,12 @@ static void NORMAL_OPERATION(void)
 /* Model step function */
 void AWDControl_step(void)
 {
-  int32_T b_previousEvent;
   boolean_T hoisted_cond;
   real_T rtb_Divide;
+  CONTROL_MODE DataTypeConversion;
+  int32_T sfEvent_e;
+  boolean_T hoisted_cond_tmp;
+  boolean_T hoisted_cond_tmp_0;
 
   /* Chart: '<S3>/Chart' incorporates:
    *  Inport: '<Root>/m_GPSvehicleSpeed'
@@ -768,9 +664,9 @@ void AWDControl_step(void)
    *  Inport: '<Root>/m_rearAxleRPM'
    *  Inport: '<Root>/m_yawRate'
    */
-  rtDW.sfEvent_e = CALL_EVENT;
-  if (rtDW.is_active_c1_AWDControl == 0U) {
-    rtDW.is_active_c1_AWDControl = 1U;
+  sfEvent_e = CALL_EVENT;
+  if (rtDW.is_active_c2_AWDControl == 0U) {
+    rtDW.is_active_c2_AWDControl = 1U;
     rtDW.is_active_STEERING_CHECK = 1U;
     rtDW.is_STEERING_CHECK = IN_NORMAL;
     rtDW.is_active_REAR_AXEL = 1U;
@@ -791,7 +687,7 @@ void AWDControl_step(void)
     rtDW.is_ERROR_STATE = IN_NO_ERRORS;
   } else {
     if (rtDW.is_active_STEERING_CHECK != 0U) {
-      STEERING_CHECK();
+      STEERING_CHECK(&sfEvent_e);
     }
 
     if (rtDW.is_active_REAR_AXEL != 0U) {
@@ -800,8 +696,6 @@ void AWDControl_step(void)
        case IN_FAILURE:
         /* The engine speed data is no longer available. */
         rtDW.rearAxleRPMOut = 0.0;
-        b_previousEvent = rtDW.sfEvent_e;
-        rtDW.sfEvent_e = event_sensorFailed;
         if (rtDW.is_active_ERROR_STATE != 0U) {
           switch (rtDW.is_ERROR_STATE) {
            case IN_ERRORS_DETECTED:
@@ -809,25 +703,21 @@ void AWDControl_step(void)
             break;
 
            case IN_NO_ERRORS:
-            if (rtDW.sfEvent_e == event_sensorFailed) {
-              rtDW.is_ERROR_STATE = IN_ERRORS_DETECTED;
-              rtDW.sensorError = true;
-            }
+            rtDW.is_ERROR_STATE = IN_ERRORS_DETECTED;
+            rtDW.sensorError = true;
             break;
           }
         }
-
-        rtDW.sfEvent_e = b_previousEvent;
         break;
 
        case IN_NORMAL:
         /* The speed sensor data accurately represents the engine speed. */
-        if ((rtU.m_rearAxleRPM < 0.0) || (rtU.m_rearAxleRPM > 2.11022299640833))
-        {
+        if ((rtU.m_rearAxleRPM < -6538.361853420437) || (rtU.m_rearAxleRPM >
+             6538.361853420437)) {
           /* Loss of a reliable speed sensor signal will indicate zero speed.  This is deemed invalid when the manifold vacuum indicates otherwise. */
           rtDW.is_REAR_AXEL = IN_FAILURE;
         } else {
-          rtDW.BusConversion_InsertedFor_Vehic.steeringAngle = rtU.m_rearAxleRPM;
+          rtDW.rearAxleRPMOut = rtU.m_rearAxleRPM;
         }
         break;
       }
@@ -839,8 +729,6 @@ void AWDControl_step(void)
        case IN_FAILURE:
         /* The engine speed data is no longer available. */
         rtDW.frontLeftRPMOut = 0.0;
-        b_previousEvent = rtDW.sfEvent_e;
-        rtDW.sfEvent_e = event_sensorFailed;
         if (rtDW.is_active_ERROR_STATE != 0U) {
           switch (rtDW.is_ERROR_STATE) {
            case IN_ERRORS_DETECTED:
@@ -848,21 +736,17 @@ void AWDControl_step(void)
             break;
 
            case IN_NO_ERRORS:
-            if (rtDW.sfEvent_e == event_sensorFailed) {
-              rtDW.is_ERROR_STATE = IN_ERRORS_DETECTED;
-              rtDW.sensorError = true;
-            }
+            rtDW.is_ERROR_STATE = IN_ERRORS_DETECTED;
+            rtDW.sensorError = true;
             break;
           }
         }
-
-        rtDW.sfEvent_e = b_previousEvent;
         break;
 
        case IN_NORMAL:
         /* The speed sensor data accurately represents the engine speed. */
-        if ((rtU.m_frontLeftRPM < 0.0) || (rtU.m_frontLeftRPM > 2.11022299640833))
-        {
+        if ((rtU.m_frontLeftRPM < -6538.361853420437) || (rtU.m_frontLeftRPM >
+             6538.361853420437)) {
           /* Loss of a reliable speed sensor signal will indicate zero speed.  This is deemed invalid when the manifold vacuum indicates otherwise. */
           rtDW.is_FRONT_LEFT_WHEEL = IN_FAILURE;
         } else {
@@ -878,8 +762,6 @@ void AWDControl_step(void)
        case IN_FAILURE:
         /* The engine speed data is no longer available. */
         rtDW.frontRightRPMOut = 0.0;
-        b_previousEvent = rtDW.sfEvent_e;
-        rtDW.sfEvent_e = event_sensorFailed;
         if (rtDW.is_active_ERROR_STATE != 0U) {
           switch (rtDW.is_ERROR_STATE) {
            case IN_ERRORS_DETECTED:
@@ -887,21 +769,17 @@ void AWDControl_step(void)
             break;
 
            case IN_NO_ERRORS:
-            if (rtDW.sfEvent_e == event_sensorFailed) {
-              rtDW.is_ERROR_STATE = IN_ERRORS_DETECTED;
-              rtDW.sensorError = true;
-            }
+            rtDW.is_ERROR_STATE = IN_ERRORS_DETECTED;
+            rtDW.sensorError = true;
             break;
           }
         }
-
-        rtDW.sfEvent_e = b_previousEvent;
         break;
 
        case IN_NORMAL:
         /* The speed sensor data accurately represents the engine speed. */
-        if ((rtU.m_frontRightRPM < 0.0) || (rtU.m_frontRightRPM >
-             2.11022299640833)) {
+        if ((rtU.m_frontRightRPM < -6538.361853420437) || (rtU.m_frontRightRPM >
+             6538.361853420437)) {
           /* Loss of a reliable speed sensor signal will indicate zero speed.  This is deemed invalid when the manifold vacuum indicates otherwise. */
           rtDW.is_FRONT_RIGHT_WHEEL = IN_FAILURE;
         } else {
@@ -917,8 +795,6 @@ void AWDControl_step(void)
        case IN_FAILURE:
         /* The engine speed data is no longer available. */
         rtDW.BusConversion_InsertedFor_Vehic.yawRate = 0.0;
-        b_previousEvent = rtDW.sfEvent_e;
-        rtDW.sfEvent_e = event_sensorFailed;
         if (rtDW.is_active_ERROR_STATE != 0U) {
           switch (rtDW.is_ERROR_STATE) {
            case IN_ERRORS_DETECTED:
@@ -926,20 +802,16 @@ void AWDControl_step(void)
             break;
 
            case IN_NO_ERRORS:
-            if (rtDW.sfEvent_e == event_sensorFailed) {
-              rtDW.is_ERROR_STATE = IN_ERRORS_DETECTED;
-              rtDW.sensorError = true;
-            }
+            rtDW.is_ERROR_STATE = IN_ERRORS_DETECTED;
+            rtDW.sensorError = true;
             break;
           }
         }
-
-        rtDW.sfEvent_e = b_previousEvent;
         break;
 
        case IN_NORMAL:
         /* The speed sensor data accurately represents the engine speed. */
-        if ((rtU.m_yawRate < 0.0) || (rtU.m_yawRate > 1000.0)) {
+        if ((rtU.m_yawRate < -1000.0) || (rtU.m_yawRate > 1000.0)) {
           /* Loss of a reliable speed sensor signal will indicate zero speed.  This is deemed invalid when the manifold vacuum indicates otherwise. */
           rtDW.is_YAW_RATE_CHECK = IN_FAILURE;
         } else {
@@ -955,8 +827,6 @@ void AWDControl_step(void)
        case IN_FAILURE:
         /* The engine speed data is no longer available. */
         rtDW.BusConversion_InsertedFor_Vehic.accelerationX = 0.0;
-        b_previousEvent = rtDW.sfEvent_e;
-        rtDW.sfEvent_e = event_sensorFailed;
         if (rtDW.is_active_ERROR_STATE != 0U) {
           switch (rtDW.is_ERROR_STATE) {
            case IN_ERRORS_DETECTED:
@@ -964,15 +834,11 @@ void AWDControl_step(void)
             break;
 
            case IN_NO_ERRORS:
-            if (rtDW.sfEvent_e == event_sensorFailed) {
-              rtDW.is_ERROR_STATE = IN_ERRORS_DETECTED;
-              rtDW.sensorError = true;
-            }
+            rtDW.is_ERROR_STATE = IN_ERRORS_DETECTED;
+            rtDW.sensorError = true;
             break;
           }
         }
-
-        rtDW.sfEvent_e = b_previousEvent;
         break;
 
        case IN_NORMAL:
@@ -995,8 +861,6 @@ void AWDControl_step(void)
        case IN_FAILURE:
         /* The engine speed data is no longer available. */
         rtDW.BusConversion_InsertedFor_Vehic.accelerationY = 0.0;
-        b_previousEvent = rtDW.sfEvent_e;
-        rtDW.sfEvent_e = event_sensorFailed;
         if (rtDW.is_active_ERROR_STATE != 0U) {
           switch (rtDW.is_ERROR_STATE) {
            case IN_ERRORS_DETECTED:
@@ -1004,21 +868,17 @@ void AWDControl_step(void)
             break;
 
            case IN_NO_ERRORS:
-            if (rtDW.sfEvent_e == event_sensorFailed) {
-              rtDW.is_ERROR_STATE = IN_ERRORS_DETECTED;
-              rtDW.sensorError = true;
-            }
+            rtDW.is_ERROR_STATE = IN_ERRORS_DETECTED;
+            rtDW.sensorError = true;
             break;
           }
         }
-
-        rtDW.sfEvent_e = b_previousEvent;
         break;
 
        case IN_NORMAL:
         /* The speed sensor data accurately represents the engine speed. */
-        if ((rtU.m_accelerationLateral < -5.0) || (rtU.m_accelerationLateral >
-             5.0)) {
+        if ((rtU.m_accelerationLateral < -50.0) || (rtU.m_accelerationLateral >
+             50.0)) {
           /* Loss of a reliable speed sensor signal will indicate zero speed.  This is deemed invalid when the manifold vacuum indicates otherwise. */
           rtDW.is_ACCELEROMETER_LATERAL_CHECK = IN_FAILURE;
         } else {
@@ -1035,8 +895,6 @@ void AWDControl_step(void)
        case IN_FAILURE:
         /* The engine speed data is no longer available. */
         rtDW.GPSvehicleSpeedOut = 0.0;
-        b_previousEvent = rtDW.sfEvent_e;
-        rtDW.sfEvent_e = event_sensorFailed;
         if (rtDW.is_active_ERROR_STATE != 0U) {
           switch (rtDW.is_ERROR_STATE) {
            case IN_ERRORS_DETECTED:
@@ -1044,15 +902,11 @@ void AWDControl_step(void)
             break;
 
            case IN_NO_ERRORS:
-            if (rtDW.sfEvent_e == event_sensorFailed) {
-              rtDW.is_ERROR_STATE = IN_ERRORS_DETECTED;
-              rtDW.sensorError = true;
-            }
+            rtDW.is_ERROR_STATE = IN_ERRORS_DETECTED;
+            rtDW.sensorError = true;
             break;
           }
         }
-
-        rtDW.sfEvent_e = b_previousEvent;
         break;
 
        case IN_NORMAL:
@@ -1074,7 +928,7 @@ void AWDControl_step(void)
         break;
 
        case IN_NO_ERRORS:
-        if (rtDW.sfEvent_e == event_sensorFailed) {
+        if (sfEvent_e == event_sensorFailed) {
           rtDW.is_ERROR_STATE = IN_ERRORS_DETECTED;
           rtDW.sensorError = true;
         }
@@ -1086,36 +940,36 @@ void AWDControl_step(void)
   /* End of Chart: '<S3>/Chart' */
 
   /* Gain: '<S11>/Gain' */
-  rtb_Divide = 0.0012095262285762667 * rtDW.GPSvehicleSpeedOut;
+  rtb_Divide = 3.7495238095238093 * rtDW.GPSvehicleSpeedOut;
 
   /* BusCreator: '<Root>/BusConversion_InsertedFor_Vehicle Dynamic Controller_at_inport_0' incorporates:
    *  Gain: '<S11>/Gain1'
    *  Product: '<S11>/Divide'
    *  Sum: '<S11>/Subtract'
    */
-  rtDW.BusConversion_InsertedFor_Vehic.slipRatioRear = (9.5541401273885338 *
+  rtDW.BusConversion_InsertedFor_Vehic.slipRatioRear = (9.5492965855137211 *
     rtDW.rearAxleRPMOut - rtb_Divide) / rtb_Divide;
 
   /* Gain: '<S9>/Gain' */
-  rtb_Divide = 0.0012095262285762667 * rtDW.GPSvehicleSpeedOut;
+  rtb_Divide = 3.7495238095238093 * rtDW.GPSvehicleSpeedOut;
 
   /* BusCreator: '<Root>/BusConversion_InsertedFor_Vehicle Dynamic Controller_at_inport_0' incorporates:
    *  Gain: '<S9>/Gain1'
    *  Product: '<S9>/Divide'
    *  Sum: '<S9>/Subtract'
    */
-  rtDW.BusConversion_InsertedFor_Vehic.slipRatioFL = (9.5541401273885338 *
+  rtDW.BusConversion_InsertedFor_Vehic.slipRatioFL = (9.5492965855137211 *
     rtDW.frontLeftRPMOut - rtb_Divide) / rtb_Divide;
 
   /* Gain: '<S10>/Gain' */
-  rtb_Divide = 0.0012095262285762667 * rtDW.GPSvehicleSpeedOut;
+  rtb_Divide = 3.7495238095238093 * rtDW.GPSvehicleSpeedOut;
 
   /* BusCreator: '<Root>/BusConversion_InsertedFor_Vehicle Dynamic Controller_at_inport_0' incorporates:
    *  Gain: '<S10>/Gain1'
    *  Product: '<S10>/Divide'
    *  Sum: '<S10>/Subtract'
    */
-  rtDW.BusConversion_InsertedFor_Vehic.slipRatioFR = (9.5541401273885338 *
+  rtDW.BusConversion_InsertedFor_Vehic.slipRatioFR = (9.5492965855137211 *
     rtDW.frontRightRPMOut - rtb_Divide) / rtb_Divide;
   rtDW.BusConversion_InsertedFor_Vehic.velocityX = rtDW.GPSvehicleSpeedOut;
   rtDW.BusConversion_InsertedFor_Vehic.velocityY = 0.0;
@@ -1123,26 +977,30 @@ void AWDControl_step(void)
   /* DataTypeConversion: '<S1>/Data Type Conversion' incorporates:
    *  Inport: '<Root>/m_controlMode'
    */
-  rtDW.DataTypeConversion = (CONTROL_MODE)rtU.m_controlMode;
+  DataTypeConversion = (CONTROL_MODE)rtU.m_controlMode;
 
   /* Chart: '<Root>/Vehicle Dynamic Controller' incorporates:
    *  Inport: '<Root>/m_frontLeftSwitch'
    *  Inport: '<Root>/m_frontRightSwitch'
+   *  Outport: '<Root>/c_frontLeftMotorActuate'
+   *  Outport: '<Root>/c_frontRightMotorActuate'
    */
   rtDW.chartAbsoluteTimeCounter++;
-  hoisted_cond = (rtU.m_frontLeftSwitch && (rtDW.frontLeftMotorActuate == 0.0));
+  hoisted_cond_tmp = !rtU.m_frontLeftSwitch;
+  hoisted_cond = (hoisted_cond_tmp && (rtY.c_frontLeftMotorActuate == 0.0));
   if ((!hoisted_cond) || (!rtDW.condWasTrueAtLastTimeStep_1)) {
     rtDW.durationLastReferenceTick_1 = rtDW.chartAbsoluteTimeCounter;
   }
 
   rtDW.condWasTrueAtLastTimeStep_1 = hoisted_cond;
-  hoisted_cond = (rtU.m_frontRightSwitch && (rtDW.frontRightMotorActuate == 0.0));
+  hoisted_cond_tmp_0 = !rtU.m_frontRightSwitch;
+  hoisted_cond = (hoisted_cond_tmp_0 && (rtY.c_frontRightMotorActuate == 0.0));
   if ((!hoisted_cond) || (!rtDW.condWasTrueAtLastTimeStep_2)) {
     rtDW.durationLastReferenceTick_2 = rtDW.chartAbsoluteTimeCounter;
   }
 
   rtDW.condWasTrueAtLastTimeStep_2 = hoisted_cond;
-  rtDW.sfEvent = CALL_EVENT;
+  sfEvent_e = CALL_EVENT;
   if (rtDW.is_active_c3_AWDControl == 0U) {
     rtDW.chartAbsoluteTimeCounter = 0;
     rtDW.is_active_c3_AWDControl = 1U;
@@ -1150,18 +1008,17 @@ void AWDControl_step(void)
     rtDW.durationLastReferenceTick_2 = rtDW.chartAbsoluteTimeCounter;
     rtDW.durationLastReferenceTick_1 = rtDW.chartAbsoluteTimeCounter;
     rtDW.is_CHECK_FOR_CONTROL_ERRORS = IN_NO_ERRORS;
-    rtDW.condWasTrueAtLastTimeStep_1 = (rtU.m_frontLeftSwitch &&
-      (rtDW.frontLeftMotorActuate == 0.0));
-    rtDW.condWasTrueAtLastTimeStep_2 = (rtU.m_frontRightSwitch &&
-      (rtDW.frontRightMotorActuate == 0.0));
+    rtDW.condWasTrueAtLastTimeStep_1 = (hoisted_cond_tmp &&
+      (rtY.c_frontLeftMotorActuate == 0.0));
+    rtDW.condWasTrueAtLastTimeStep_2 = (hoisted_cond_tmp_0 &&
+      (rtY.c_frontRightMotorActuate == 0.0));
     rtDW.is_active_AWD_CONTROL = 1U;
     rtDW.is_AWD_CONTROL = IN_NORMAL_OPERATION;
     rtDW.is_NORMAL_OPERATION = IN_OFF_MODE;
   } else {
     if ((rtDW.is_active_CHECK_FOR_CONTROL_ERR != 0U) &&
         (rtDW.is_CHECK_FOR_CONTROL_ERRORS == IN_NO_ERRORS)) {
-      hoisted_cond = (rtU.m_frontLeftSwitch && (rtDW.frontLeftMotorActuate ==
-        0.0));
+      hoisted_cond = (hoisted_cond_tmp && (rtY.c_frontLeftMotorActuate == 0.0));
       if ((!hoisted_cond) || (!rtDW.condWasTrueAtLastTimeStep_1)) {
         rtDW.durationLastReferenceTick_1 = rtDW.chartAbsoluteTimeCounter;
       }
@@ -1171,7 +1028,7 @@ void AWDControl_step(void)
           5000) {
         hoisted_cond = true;
       } else {
-        hoisted_cond = (rtU.m_frontRightSwitch && (rtDW.frontRightMotorActuate ==
+        hoisted_cond = (hoisted_cond_tmp_0 && (rtY.c_frontRightMotorActuate ==
           0.0));
         if ((!hoisted_cond) || (!rtDW.condWasTrueAtLastTimeStep_2)) {
           rtDW.durationLastReferenceTick_2 = rtDW.chartAbsoluteTimeCounter;
@@ -1184,8 +1041,7 @@ void AWDControl_step(void)
 
       if (hoisted_cond) {
         rtDW.is_CHECK_FOR_CONTROL_ERRORS = IN_ERRORS;
-        b_previousEvent = rtDW.sfEvent;
-        rtDW.sfEvent = event_motorFailed;
+        sfEvent_e = event_motorFailed;
         if (rtDW.is_active_AWD_CONTROL != 0U) {
           switch (rtDW.is_AWD_CONTROL) {
            case IN_ERROR:
@@ -1197,12 +1053,12 @@ void AWDControl_step(void)
             break;
 
            case IN_NORMAL_OPERATION:
-            NORMAL_OPERATION();
+            NORMAL_OPERATION(&DataTypeConversion, &sfEvent_e);
             break;
           }
         }
 
-        rtDW.sfEvent = b_previousEvent;
+        sfEvent_e = CALL_EVENT;
       }
     }
 
@@ -1217,40 +1073,19 @@ void AWDControl_step(void)
         break;
 
        case IN_NORMAL_OPERATION:
-        NORMAL_OPERATION();
+        NORMAL_OPERATION(&DataTypeConversion, &sfEvent_e);
         break;
       }
     }
   }
 
   /* End of Chart: '<Root>/Vehicle Dynamic Controller' */
-  LowpassFilter1(rtDW.frontLeftMotorActuate, &rtDW.LowpassFilter);
-
-  /* Outport: '<Root>/c_frontLeftMotorActuate' */
-  rtY.c_frontLeftMotorActuate = rtDW.LowpassFilter.LowpassFilter1_o;
-
-  /* MATLABSystem: '<S2>/Lowpass Filter1' */
-  LowpassFilter1(rtDW.frontRightMotorActuate, &rtDW.LowpassFilter1_p);
-
-  /* Outport: '<Root>/c_frontRightMotorActuate' */
-  rtY.c_frontRightMotorActuate = rtDW.LowpassFilter1_p.LowpassFilter1_o;
 }
 
 /* Model initialize function */
 void AWDControl_initialize(void)
 {
-  LowpassFilter1_Start(&rtDW.LowpassFilter);
-
-  /* Start for MATLABSystem: '<S2>/Lowpass Filter1' */
-  LowpassFilter1_Start(&rtDW.LowpassFilter1_p);
-
-  /* SystemInitialize for Chart: '<S3>/Chart' */
-  rtDW.sfEvent_e = CALL_EVENT;
-
-  /* SystemInitialize for Chart: '<Root>/Vehicle Dynamic Controller' */
-  rtDW.sfEvent = CALL_EVENT;
-  LowpassFilter1_Init(&rtDW.LowpassFilter);
-  LowpassFilter1_Init(&rtDW.LowpassFilter1_p);
+  /* (no initialization code required) */
 }
 
 /*
