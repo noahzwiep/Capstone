@@ -1,4 +1,5 @@
 # Capstone 
+![McMaster Baja Racing Logo](/images/Logo.png)
 
 ## Background
 This repository provides the firmware necessary for a Smart AWD system for McMaster Baja Racing's vehicle. 
