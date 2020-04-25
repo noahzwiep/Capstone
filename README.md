@@ -9,7 +9,7 @@ This is a project to be used with the MCUXPresso IDE.
 The code is generated for the FRDM-K64F development board. If on McMaster Baja Racing, see the associated documentation on Box for background, wiring schematics, verification, and validation. 
 
 ## Software Design
-- All custom, non-firmware code is in [source](/source/). 
+- All custom, non-firmware code is in [source](https://github.com/noahzwiep/Capstone/tree/master/source). 
 - The main loop is found in MK64FN1M0xxx12_Project.cpp. This handles all initializations and at what rate every function is called at. 
 - All IRQ handling is done in IrqHandler.h/.c. 
 - Simulink code generation is used to create AWDControl.c/.h and its associated header files. 
